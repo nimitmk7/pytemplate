@@ -1,6 +1,7 @@
 
-class Calculator:
-    
+import calculator_interface
+
+class Calculator(calculator_interface.Calculator):
     def add(self, a: float, b: float) -> float:
         """Add two numbers and return the result."""
         return a + b

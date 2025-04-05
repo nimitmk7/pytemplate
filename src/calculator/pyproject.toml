@@ -4,9 +4,26 @@ version = "0.1.0"
 description = "Calculator component to perform basic arithmetic operations"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["pytest>=8.3.5"]
+dependencies = ["uv", "pytest", "coverage", "mypy", "ruff"]  # List of dependencies for the project
 
 # Defines the build system required for setuptools
 [build-system]
-requires = ["setuptools", "wheel"]      # Required for building the package
+requires = ["setuptools"]      # Required for building the package
 build-backend = "setuptools.build_meta"
+
+[tool.mypy]
+strict = true
+
+[tool.ruff.lint]
+ignore = ["D203", "D213"] 
+select = ["D", "E", "F", "ANN", "UP", "TRY", "EM"]
+exclude = ["test_*.py"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests*", "test_*.py"]
+
+[project.optional-dependencies]
+dev = [
+    "types-setuptools>=42.0.0"
+]
