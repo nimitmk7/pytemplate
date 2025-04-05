@@ -1,0 +1,40 @@
+version: 2.1
+executors:
+  pyexecutor:
+    docker:
+      - image: circleci/python:3.11
+
+jobs:
+    run_checks_and_tests:
+    docker:
+      - image: circleci/python:3.11
+    steps:
+      - checkout:
+
+      - run:
+          name: Setup UV
+          command: |
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+              echo 'export PATH="$HOME/.local/bin:$PATH"' >> $BASH_ENV
+              source $BASH_ENV
+
+      - run:
+          name: Install Dependencies
+          command: |
+            uv pip install --system -r requirements.txt
+            uv pip install --system -e .
+
+      - run:
+          name: Set PYTHONPATH
+          command: |
+            echo "export PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $BASH_ENV
+      
+      
+
+
+      - run:
+          name: Ruff Linter
+          command: |
+            ruff check src/ tests/
+
+      
