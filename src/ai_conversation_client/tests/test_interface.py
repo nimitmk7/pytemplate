@@ -19,7 +19,6 @@ class TestAIConversationClient:
         """Verify create_thread() adheres to its interface contract."""
         mock_client.create_thread.return_value = Mock(spec=Thread)
         thread = mock_client.create_thread()
-
         assert isinstance(thread, Thread)
         mock_client.create_thread.assert_called_once()
 
@@ -80,7 +79,6 @@ class TestThread:
         mock_thread.post.return_value = test_response
 
         response = mock_thread.post("gpt-4", "Hello!")
-
         assert isinstance(response, str)
         assert response == test_response
         mock_thread.post.assert_called_once_with("gpt-4", "Hello!")
