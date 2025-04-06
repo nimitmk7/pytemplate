@@ -1,5 +1,7 @@
-from typing import Protocol, List
+from typing import Protocol, List, runtime_checkable
 
+
+@runtime_checkable
 class Thread(Protocol):
     """A conversation thread."""
 
@@ -15,7 +17,7 @@ class Thread(Protocol):
         raise NotImplementedError()
     
     
-
+@runtime_checkable
 class AIConversationClient(Protocol):
     """An AI Assistant Client used to maintain conversation threads."""
 
