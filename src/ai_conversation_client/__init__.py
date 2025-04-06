@@ -17,6 +17,8 @@ class Thread(Protocol):
         raise NotImplementedError()
 
 
+
+
 @runtime_checkable
 class AIConversationClient(Protocol):
     """An AI Assistant Client used to maintain conversation threads."""
