@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock
 
-from src.ai_conversation_client.ai_conversation_client_interface import AIConversationClient, Thread
+from ai_conversation_client import AIConversationClient, Thread
 
 
 class TestAIConversationClient:
