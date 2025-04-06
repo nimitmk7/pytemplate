@@ -1,17 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "example_project"
+name = "python-template-repo"
 version = "0.1.0"
-description = "An example Python project"
+description = "Python project template with testing, linting, and CI/CD"
+requires-python = ">=3.12"
+license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+
+
 dependencies = [
-    "pytest==8.3.5",
-    "ruff==0.9.9",
+    "mypy>=1.5.1",
+    "ruff>=0.1.5",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.5.1",
+    "ruff>=0.1.5",
+]
 
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.pytest.ini_options]
+testpaths = ["src", "tests"]
+python_files = "test_*.py"
+addopts = "--cov=src --cov-report=xml --cov-report=term"
 
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
 
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "D", "ANN"]
+ignore = ["D100", "D104", "D107", "ANN101"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

@@ -1,0 +1,11 @@
+[project]
+name = "ai-assistant-api"
+version = "0.1.0"
+description = "Python Interface for AI Conversation Client"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
