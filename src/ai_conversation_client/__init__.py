@@ -1,6 +1,7 @@
-from typing import List, Protocol
+from typing import Protocol, List, runtime_checkable
 
 
+@runtime_checkable
 class Thread(Protocol):
     """A conversation thread."""
 
@@ -14,9 +15,9 @@ class Thread(Protocol):
     def update_model(self, model: str) -> None:
         """Change the AI model used in the thread."""
         raise NotImplementedError()
-
-
-
+    
+    
+@runtime_checkable
 class AIConversationClient(Protocol):
     """An AI Assistant Client used to maintain conversation threads."""
 
