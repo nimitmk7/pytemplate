@@ -8,7 +8,7 @@ class SimpleLogger(LoggerInterface):
 
     def __init__(self) -> None:
         """Initialize the internal log storage."""
-        self._logs = []
+        self._logs: list[str] = []
 
     def log(self, message: str) -> None:
         """Add a message to the internal log."""
