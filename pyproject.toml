@@ -15,4 +15,5 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.ruff]
-ignore = ["D101", "D404", "D413"]
+ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D404", "D413", "D205", "D210"] 
+
