@@ -16,7 +16,8 @@ class Calculator(calculator_interface.Calculator):
 
     def divide(self, a:float, b:float) -> float:
         """Divide two numbers, while making sure to avoid division by zero, 
-        and returns the result."""
+        and returns the result.
+        """
         if b == 0:
             raise ValueError("Cannot divide by zero.")
         return a / b

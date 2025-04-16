@@ -50,5 +50,6 @@ class Calculator:
             float: The quotient of a and b.
 
         Raises:
-            ValueError: If b is zero."""
+            ValueError: If b is zero.
+        """
         raise NotImplementedError("This method should be overridden by subclasses")
