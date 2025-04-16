@@ -1,5 +1,5 @@
 """Provides implmentation of the calculator interface."""
-import calculator_interface
+from . import calculator_interface
 
 class Calculator(calculator_interface.Calculator):
     def add(self, a: float, b: float) -> float:
