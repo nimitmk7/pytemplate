@@ -39,7 +39,8 @@ class Calculator:
         raise NotImplementedError("This method should be overridden by subclasses")
 
     def divide(self, a: float, b: float) -> float:
-        """Divide two numbers, while making sure to avoid division by zero, 
+        """
+        Divide two numbers, while making sure to avoid division by zero, 
         and return the result.
 
         Args:
