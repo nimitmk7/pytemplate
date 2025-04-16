@@ -14,4 +14,5 @@ dependencies = [
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
+[tool.ruff]
+ignore = ["D101", "D404", "D413"]
