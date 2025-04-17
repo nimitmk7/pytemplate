@@ -1,4 +1,6 @@
-"""Interface for notification mechanisms."""
+"""Interface for notification mechanisms.
+Monitors calculation results and triggers notifications if a result exceeds a predefined threshold."""
+
 
 from abc import ABC, abstractmethod
 
