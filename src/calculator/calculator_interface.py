@@ -1,5 +1,5 @@
-"""A definition of the Calculator interface.
-Provides basic arithmetic operations."""
+"""A definition of the Calculator interface."""
+"""Provides basic arithmetic operations."""
 
 
 class Calculator:

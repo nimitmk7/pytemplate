@@ -1,5 +1,5 @@
-"""Logger interface module.
-Records operations performed by calculator."""
+"""Logger interface module."""
+"""Records operations performed by calculator."""
 
 from abc import ABC, abstractmethod
 
