@@ -1,6 +1,6 @@
 """This module provides an AI client interface and its implementation."""
 
-from typing import Protocol, list, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 
 @runtime_checkable
