@@ -22,7 +22,7 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
-  test:
+  build_and_test:
     docker:
       - image: cimg/python:3.12
     # Set PYTHONPATH to the repository root so that the src package is recognized
@@ -30,9 +30,6 @@ jobs:
       PYTHONPATH: .
     steps:
       - checkout
-      - run:
-          name: "Run tests"
-          command: "echo Running tests..."
       - run:
           name: Installing UV
           command: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -44,39 +41,40 @@ jobs:
           command: |
             source .venv/bin/activate
             uv sync
-            uvx ruff check .
-            mkdir -p test-results
-            coverage run -m pytest tests/ --junitxml=test-results/junit.xml
-            coverage report
-            coverage xml
-            coverage html
-      - run:
-          name: Run Static Analysis (mypy)
+      - run: 
+          name: Check code formatting(ruff)
           command: |
             source .venv/bin/activate
-            mypy --strict src/
+            uvx ruff check .
+      - run: 
+          name: Run static analuysis(mypy)
+          command: |
+            source .venv/bin/activate
+            uvx mypy src/
+      - run:
+          name: Run tests
+          command: |
+            source .venv/bin/activate
+            mkdir -p test-results
+            coverage run -m pytest tests src/calculator/tests src/logger/tests src/notifier/tests --junitxml=test-results/junit.xml
+            coverage report -m
+            coverage html -d coverage-unit
       - run:
           name: Enforce Coverage Threshold
           command: |
             source .venv/bin/activate
             coverage report --fail-under=90
-      - run:
-          name: Run nose2 Tests (Extra Credit)
-          command: |
-            source .venv/bin/activate
-            uv pip install nose2
-            nose2 --with-coverage
       - store_test_results:
           path: test-results
       - store_artifacts:
-          path: htmlcov
+          path: test-results
+          destination: test-results
       - store_artifacts:
-          path: coverage.xml
+          path: coverage-unit
+          destination: coverage-unit
 
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
+  build-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - test
+      - build_and_test

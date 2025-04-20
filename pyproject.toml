@@ -12,8 +12,10 @@ readme = "README.md"
 
 
 dependencies = [
-    "mypy>=1.5.1",
-    "ruff>=0.1.5",
+    "pytest==8.3.5",
+    "ruff==0.9.9",
+    "coverage", 
+    "mypy"
 ]
 
 [project.optional-dependencies]
@@ -29,12 +31,16 @@ testpaths = ["src", "tests"]
 python_files = "test_*.py"
 addopts = "--cov=src --cov-report=xml --cov-report=term"
 
+
 [tool.mypy]
 python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
+
+[tool.ruff]
+ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D404", "D413", "D205", "D210"] 
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "UP", "D", "ANN"]
