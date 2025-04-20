@@ -42,7 +42,7 @@ ignore_missing_imports = true
 strict = true
 
 [tool.ruff.lint]
-ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D404", "D413", "D205", "D210", "D100", "D107", "ANN101"]
+ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D103", "D404", "D413", "D205", "D210", "D100", "D107", "ANN101"]
 select = ["D", "E", "F", "ANN", "UP", "TRY", "EM", "W", "I"]
 
 [tool.ruff.lint.pydocstyle]
