@@ -1,6 +1,6 @@
 """This module provides an AI client interface and its implementation."""
 
-from typing import Protocol, list, runtime_checkable
+from typing import List, Protocol, runtime_checkable
 
 
 @runtime_checkable
@@ -31,11 +31,11 @@ class AIConversationClient(Protocol):
         """Create a new conversation thread."""
         raise NotImplementedError()
 
-    def get_all_threads(self) -> list[Thread]:
+    def get_all_threads(self) -> List[Thread]:
         """View all conversation threads."""
         raise NotImplementedError()
 
-    def fetch_available_models(self) -> list[str]:
+    def fetch_available_models(self) -> List[str]:
         """Fetch all available models."""
         raise NotImplementedError()
 
