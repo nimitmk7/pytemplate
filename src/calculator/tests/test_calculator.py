@@ -12,7 +12,7 @@ def test_multiply() -> None:
     calc = Calculator()
     assert calc.multiply(2, 3) == 6
 
-def test_divide()-> None:
+def test_divide() -> None:
     calc = Calculator()
     assert calc.divide(6, 3) == 2
     try:
