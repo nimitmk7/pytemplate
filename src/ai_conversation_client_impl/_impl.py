@@ -1,6 +1,18 @@
 from ai_conversation_client import AIConversationClient, ModelProvider, Thread, ThreadRepository
 from openai import OpenAI
+from dataclasses import dataclass
 import uuid
+import enum
+
+class Role(enum.StrEnum):
+    USER = "user"
+    ASSISTANT = "assistant"
+    SYSTEM = "system"
+
+@dataclass
+class Message:
+    role: Role
+    content: str
 
 class OpenAIProvider(ModelProvider):
     def __init__(self, api_key: str, available_models: list[str]):
@@ -33,12 +45,13 @@ class OpenAIProvider(ModelProvider):
         return self.default_model
     
 class Thread(Thread):
-    def __init__(self, model_provider: ModelProvider):
+    def __init__(self, model_provider: ModelProvider, message: str = "Hello!"):
         self.thread_id = str(uuid.uuid4())
         self.model_provider = model_provider
         self.model_name = model_provider.get_default_model()
+        self.history = [Message(Role.System, message)]
 
-    def post(self, message: str) -> str:
+    def post(self, message: str, temperature: float = 0.7, max_tokens: int = 500) -> str:
         """Post a message to the thread and get the AI's response.
         
         Args:
@@ -47,7 +60,10 @@ class Thread(Thread):
         Returns:
             str: The AI assistant's response.
         """
-        return self.model_provider.generate_response(self.model_name, message)
+        self.history.append(Message(Role.User, message))
+        response = self.model_provider.generate_response(self.model_name, message, temperature, max_tokens)
+        self.history.append(Message(Role.Assistant, response))
+        return self.history[-1].content
 
     def get_id(self) -> str:
         """Get the unique identifier for this thread.
@@ -115,13 +131,22 @@ class AIConversationClient(AIConversationClient):
     def get_all_threads(self) -> list[Thread]:
         return self.thread_repository.get_all()
     
+    def update_thread_model(self, thread_id: str, model_name: str) -> None:
+        thread = self.thread_repository.get_by_id(thread_id)
+        thread.update_model(model_name)
+        self.thread_repository.save(thread)
+
+    def post_message_to_thread(self, thread_id: str, message: str, temperature: float = 0.7, max_tokens: int = 500) -> str:
+        thread = self.thread_repository.get_by_id(thread_id)
+        return thread.post(message, temperature, max_tokens)
+    
     def delete_thread(self, thread_id: str) -> None:
         self.thread_repository.delete(thread_id)
 
     def fetch_available_models(self) -> list[str]:
         return self.model_provider.get_available_models()
     
-    
+
     
 
     
