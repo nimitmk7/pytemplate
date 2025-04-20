@@ -1,0 +1,5 @@
+[project]
+name = "ai_conversation_client_impl"
+version = "0.1.0"
+description = "AI Conversation Client Implementation"
+dependencies = ["ai_conversation_client", "openai", "pytest"]
