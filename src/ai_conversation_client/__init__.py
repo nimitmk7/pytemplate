@@ -1,5 +1,5 @@
 """This module provides an AI client interface and its implementation."""
-from typing import list, Protocol, runtime_checkable
+from typing import list, runtime_checkable, Protocol
 
 @runtime_checkable
 class Thread(Protocol):
