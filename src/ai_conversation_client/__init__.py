@@ -1,5 +1,5 @@
 """This module provides an AI client interface and its implementation."""
-from typing import list, runtime_checkable, Protocol
+from typing import list, Protocol, runtime_checkable
 
 @runtime_checkable
 class Thread(Protocol):
@@ -15,8 +15,8 @@ class Thread(Protocol):
     def update_model(self, model: str) -> None:
         """Change the AI model used in the thread."""
         raise NotImplementedError()
-    
-    
+
+
 @runtime_checkable
 class AIConversationClient(Protocol):
     """An AI Assistant Client used to maintain conversation threads."""
