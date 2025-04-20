@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Python Interface for AI Conversation Client"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["pytest"]
+dependencies = []
 
 [build-system]
 requires = ["hatchling"]

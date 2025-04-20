@@ -20,9 +20,9 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0.0",
+    "pytest>=7.0.0",
     "pytest-cov>=4.1.0",
-    "mypy>=1.15.0",
+    "mypy>=1.5.1",
     "ruff>=0.1.5",
 ]
 
@@ -39,7 +39,6 @@ warn_unused_configs = true
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 ignore_missing_imports = true
-allow_untyped_decorators = true
 strict = true
 
 [tool.ruff.lint]
