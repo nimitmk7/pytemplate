@@ -1,1 +1,1 @@
-"""Initialize test module for ai_conversation_client."""
+"""Test package for AI conversation client interfaces."""
