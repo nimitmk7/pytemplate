@@ -56,7 +56,7 @@ jobs:
           command: |
             source .venv/bin/activate
             mkdir -p test-results
-            pytest --cov=src --cov-report=xml --cov-report=term --junitxml=test-results/junit.xml tests src/calculator/tests src/logger/tests src/notifier/tests
+            pytest src --cov=src --cov-report=xml --cov-report=term --junitxml=test-results/junit.xml
             coverage html -d coverage-unit
       - run:
           name: Enforce Coverage Threshold
