@@ -19,7 +19,7 @@ class DummyThread(Thread):
     def __init__(self, thread_id: str, model_name: str = "default-model") -> None:
         self._id = thread_id
         self._model_name = model_name
-        self._messages = []
+        self._messages: list[str] = []
 
     def post(self, message: str) -> str:
         """Post a message and get a dummy response."""
