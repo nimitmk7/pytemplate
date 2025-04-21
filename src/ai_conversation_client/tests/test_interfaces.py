@@ -1,14 +1,14 @@
 """Tests for the AI conversation client interfaces."""
 
-import pytest
 import uuid
-from typing import List, Dict
+
+import pytest
 
 from ai_conversation_client.interfaces import (
-    Thread,
-    ModelProvider,
-    ThreadRepository,
     AIConversationClient,
+    ModelProvider,
+    Thread,
+    ThreadRepository,
 )
 
 
@@ -16,7 +16,7 @@ from ai_conversation_client.interfaces import (
 class DummyThread(Thread):
     """A dummy implementation of Thread for testing."""
 
-    def __init__(self, thread_id: str, model_name: str = "default-model"):
+    def __init__(self, thread_id: str, model_name: str = "default-model") -> None:
         self._id = thread_id
         self._model_name = model_name
         self._messages = []
@@ -39,17 +39,18 @@ class DummyThread(Thread):
 class DummyModelProvider(ModelProvider):
     """A dummy implementation of ModelProvider for testing."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._models = ["model-1", "model-2", "model-3"]
 
-    def get_available_models(self) -> List[str]:
+    def get_available_models(self) -> list[str]:
         """Get available models."""
         return self._models
 
     def generate_response(self, model_name: str, prompt: str) -> str:
         """Generate a dummy response."""
         if model_name not in self._models:
-            raise ValueError(f"Model {model_name} not available")
+            msg = f"Model {model_name} not available"
+            raise ValueError(msg)
         return f"Response from {model_name}: {prompt}"
 
 
@@ -57,8 +58,8 @@ class DummyModelProvider(ModelProvider):
 class DummyThreadRepository(ThreadRepository):
     """A dummy implementation of ThreadRepository for testing."""
 
-    def __init__(self):
-        self._threads: Dict[str, Thread] = {}
+    def __init__(self) -> None:
+        self._threads: dict[str, Thread] = {}
 
     def save(self, thread: Thread) -> None:
         """Save a thread."""
@@ -67,17 +68,19 @@ class DummyThreadRepository(ThreadRepository):
     def get_by_id(self, thread_id: str) -> Thread:
         """Get a thread by ID."""
         if thread_id not in self._threads:
-            raise ValueError(f"Thread {thread_id} not found")
+            msg = f"Thread {thread_id} not found"
+            raise ValueError(msg)
         return self._threads[thread_id]
 
-    def get_all(self) -> List[Thread]:
+    def get_all(self) -> list[Thread]:
         """Get all threads."""
         return list(self._threads.values())
 
     def delete(self, thread_id: str) -> None:
         """Delete a thread."""
         if thread_id not in self._threads:
-            raise ValueError(f"Thread {thread_id} not found")
+            msg = f"Thread {thread_id} not found"
+            raise ValueError(msg)
         del self._threads[thread_id]
 
 
@@ -87,7 +90,7 @@ class DummyAIConversationClient(AIConversationClient):
 
     def __init__(
         self, model_provider: ModelProvider, thread_repository: ThreadRepository
-    ):
+    ) -> None:
         self._model_provider = model_provider
         self._thread_repository = thread_repository
 
@@ -102,7 +105,7 @@ class DummyAIConversationClient(AIConversationClient):
         """Get a thread by ID."""
         return self._thread_repository.get_by_id(thread_id)
 
-    def get_all_threads(self) -> List[Thread]:
+    def get_all_threads(self) -> list[Thread]:
         """Get all threads."""
         return self._thread_repository.get_all()
 
@@ -110,7 +113,7 @@ class DummyAIConversationClient(AIConversationClient):
         """Delete a thread."""
         self._thread_repository.delete(thread_id)
 
-    def fetch_available_models(self) -> List[str]:
+    def fetch_available_models(self) -> list[str]:
         """Get available models."""
         return self._model_provider.get_available_models()
 

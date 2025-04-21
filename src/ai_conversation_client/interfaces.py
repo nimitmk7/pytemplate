@@ -5,7 +5,6 @@ following dependency injection principles.
 """
 
 from abc import ABC, abstractmethod
-from typing import List
 
 
 class Thread(ABC):
@@ -46,7 +45,7 @@ class ModelProvider(ABC):
     """Provider for AI model capabilities."""
 
     @abstractmethod
-    def get_available_models(self) -> List[str]:
+    def get_available_models(self) -> list[str]:
         """Get a list of available AI models.
 
         Returns:
@@ -96,7 +95,7 @@ class ThreadRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all(self) -> List[Thread]:
+    def get_all(self) -> list[Thread]:
         """Get all threads.
 
         Returns:
@@ -157,7 +156,7 @@ class AIConversationClient(ABC):
         pass
 
     @abstractmethod
-    def get_all_threads(self) -> List[Thread]:
+    def get_all_threads(self) -> list[Thread]:
         """Get all threads.
 
         Returns:
@@ -178,7 +177,7 @@ class AIConversationClient(ABC):
         pass
 
     @abstractmethod
-    def fetch_available_models(self) -> List[str]:
+    def fetch_available_models(self) -> list[str]:
         """Get a list of available AI models.
 
         Returns:
