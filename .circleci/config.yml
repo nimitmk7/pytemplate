@@ -37,10 +37,10 @@ jobs:
           name: Create virtual environment
           command: uv venv .venv
       - run:
-          name: Install dependencies and run checks
+          name: Install dev dependencies
           command: |
             source .venv/bin/activate
-            uv sync
+            uv pip install -e .[dev]
       - run: 
           name: Check code formatting(ruff)
           command: |
