@@ -1,0 +1,3 @@
+[run]
+omit =
+    src/ai_conversation_client/interfaces.py
