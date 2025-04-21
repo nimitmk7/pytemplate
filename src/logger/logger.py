@@ -17,3 +17,7 @@ class SimpleLogger(LoggerInterface):
     def get_logs(self) -> list[str]:
         """Retrieve the stored log messages."""
         return self._logs
+    
+    def clear_logs(self) -> None:
+        """Clear all logged messages."""
+        self._logs = []

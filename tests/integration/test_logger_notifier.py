@@ -1,13 +1,13 @@
 """Integration test for Logger and Notifier components."""
-
-from logger.logger import SimpleLogger
-from notifier.notifier import ThresholdNotifier
+import logger
+from notifier import create_notifier
 
 
 def test_log_and_notify_behavior() -> None:
     """Ensure Logger and Notifier interact correctly."""
-    logger = SimpleLogger()
-    notifier = ThresholdNotifier(threshold=15)
+    logger.clear_logs()
+
+    notifier = create_notifier(threshold=15)
 
     value = 20
     logger.log(f"Value received: {value}")

@@ -11,9 +11,14 @@ class LoggerInterface(ABC):
     @abstractmethod
     def log(self, message: str) -> None:
         """Log a message."""
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_logs(self) -> list[str]:
         """Retrieve all logged messages."""
-        pass
+        pass # pragma: no cover
+
+    @abstractmethod
+    def clear_logs(self) -> None:
+        """Clear all logged messages."""
+        pass # pragma: no cover

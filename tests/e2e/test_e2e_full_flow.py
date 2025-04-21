@@ -1,22 +1,19 @@
 """E2E test: Calculator + Logger + Notifier working together in a full workflow."""
 
-from calculator.calculator import Calculator
-from logger.logger import SimpleLogger
-from notifier.notifier import ThresholdNotifier
+import calculator
+import logger
+import notifier
 
 
 def test_e2e_full_workflow() -> None:
     """Simulate full workflow: calculation, logging, and notification."""
-    # Initialize components
-    calc = Calculator()
-    logger = SimpleLogger()
-    notifier = ThresholdNotifier(threshold=10)
+    logger.clear_logs()
 
     # Perform calculations
-    result1 = calc.add(5, 6)           # 11
-    result2 = calc.multiply(2, 3)      # 6
-    result3 = calc.subtract(15, 5)     # 10
-    result4 = calc.divide(20, 2)       # 10.0
+    result1 = calculator.add(5, 6)           # 11
+    result2 = calculator.multiply(2, 3)      # 6
+    result3 = calculator.subtract(15, 5)     # 10
+    result4 = calculator.divide(20, 2)       # 10.0
 
     # Log operations
     logger.log(f"Addition: 5 + 6 = {result1}")

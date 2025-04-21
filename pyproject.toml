@@ -1,9 +1,12 @@
 [project]
-name = "example_project"
+name = "python-template-repo"
 version = "0.1.0"
-description = "An example Python project"
+description = "Python project template with testing, linting, and CI/CD"
+requires-python = ">=3.12"
+license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+
+
 dependencies = [
     "pytest==8.3.5",
     "ruff==0.9.9",
@@ -15,10 +18,36 @@ dependencies = [
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.ruff.lint]
-ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D404", "D413", "D205", "D210"]
-select = ["D", "E", "F", "ANN", "UP", "TRY", "EM"]
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.5.1",
+    "ruff>=0.1.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["src", "tests"]
+python_files = "test_*.py"
+addopts = "--cov=src --cov-report=xml --cov-report=term"
+
 
 [tool.mypy]
-strict = true
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
 ignore_missing_imports = true
+allow_untyped_decorators = true
+strict = true
+
+[tool.ruff.lint]
+ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D103", "D404", "D413", "D205", "D210", "D100", "D107", "ANN101"]
+select = ["D", "E", "F", "ANN", "UP", "TRY", "EM", "W", "I"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
