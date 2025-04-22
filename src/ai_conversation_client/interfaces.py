@@ -11,7 +11,12 @@ class Thread(ABC):
     """A conversation thread between a user and an AI assistant."""
 
     @abstractmethod
-    def post(self, message: str, temperature: float = 0.7, max_tokens: int = 500) -> str:
+    def post(
+        self,
+        message: str,
+        temperature: float = 0.7,
+        max_tokens: int = 500,
+    ) -> str:
         """Post a message to the thread and get the AI's response.
 
         Args:
