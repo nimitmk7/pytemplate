@@ -37,10 +37,10 @@ jobs:
           name: Create virtual environment
           command: uv venv .venv
       - run:
-          name: Install dependencies and run checks
+          name: Install dev dependencies
           command: |
             source .venv/bin/activate
-            uv sync
+            uv pip install -e .[dev]
       - run: 
           name: Check code formatting(ruff)
           command: |
@@ -56,8 +56,7 @@ jobs:
           command: |
             source .venv/bin/activate
             mkdir -p test-results
-            coverage run -m pytest tests src/calculator/tests src/logger/tests src/notifier/tests --junitxml=test-results/junit.xml
-            coverage report -m
+            pytest src --cov=src --cov-report=xml --cov-report=term --junitxml=test-results/junit.xml
             coverage html -d coverage-unit
       - run:
           name: Enforce Coverage Threshold
