@@ -1,40 +1,16 @@
 """Tests for ConcreteAIConversationClient and related classes."""
 
 from typing import cast
+from unittest.mock import patch
 
 import pytest
 
-from ai_conversation_client.interfaces import ModelProvider
 from ai_conversation_client_impl.client import (
     ConcreteAIConversationClient,
     ConcreteThread,
     ConcreteThreadRepository,
+    OpenAIProvider,
 )
-
-
-class DummyModelProvider(ModelProvider):
-    """A dummy model provider for testing."""
-
-    def __init__(self, available_models: list[str]) -> None:
-        self._models = available_models
-
-    def get_available_models(self) -> list[str]:
-        """Return the list of available models."""
-        return self._models
-
-    def generate_response(
-        self,
-        model_name: str,
-        prompt: str,
-        temperature: float = 0.7,
-        max_tokens: int = 500,
-    ) -> str:
-        """Generate a fake response."""
-        return f"[{model_name}] {prompt}"
-
-    def get_default_model(self) -> str:
-        """Return the default model."""
-        return self._models[0]
 
 
 @pytest.fixture
@@ -44,9 +20,9 @@ def available_models() -> list[str]:
 
 
 @pytest.fixture
-def model_provider(available_models: list[str]) -> DummyModelProvider:
-    """Fixture for dummy model provider."""
-    return DummyModelProvider(available_models)
+def model_provider(available_models: list[str]) -> OpenAIProvider:
+    """Fixture for OpenAIProvider with mocked API key."""
+    return OpenAIProvider(api_key="fake-api-key", available_models=available_models)
 
 
 @pytest.fixture
@@ -57,7 +33,7 @@ def thread_repository() -> ConcreteThreadRepository:
 
 @pytest.fixture
 def client(
-    model_provider: DummyModelProvider,
+    model_provider: OpenAIProvider,
     thread_repository: ConcreteThreadRepository,
 ) -> ConcreteAIConversationClient:
     """Fixture for AI conversation client."""
@@ -71,8 +47,11 @@ def test_create_thread(client: ConcreteAIConversationClient) -> None:
     assert thread.get_id() in repo.threads
 
 
-def test_post_message(client: ConcreteAIConversationClient) -> None:
-    """Test posting a message returns the expected response."""
+@patch.object(OpenAIProvider, "generate_response", return_value="[gpt-4] Hello!")
+def test_post_message(
+    mock_generate_response: object, client: ConcreteAIConversationClient
+) -> None:
+    """Test posting a message returns the mocked response."""
     thread = client.create_thread()
     response = client.post_message_to_thread(thread.get_id(), "Hello!")
     assert "[gpt-4] Hello!" in response
@@ -84,7 +63,8 @@ def test_update_thread_model(
     """Test updating the thread's model name."""
     thread = client.create_thread()
     client.update_thread_model(thread.get_id(), available_models[1])
-    concrete_thread = cast(ConcreteThread, thread)
+    concrete_thread = thread  # already ConcreteThread
+    assert isinstance(concrete_thread, ConcreteThread)
     assert concrete_thread.model_name == available_models[1]
 
 
@@ -112,7 +92,8 @@ def test_delete_thread(client: ConcreteAIConversationClient) -> None:
 
 
 def test_fetch_available_models(
-    client: ConcreteAIConversationClient, available_models: list[str]
+    client: ConcreteAIConversationClient,
+    available_models: list[str],
 ) -> None:
     """Test listing available models."""
     models = client.fetch_available_models()
