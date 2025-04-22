@@ -34,7 +34,6 @@ class DummyModelProvider(ModelProvider):
         Returns:
             A string representing the generated response.
         """
-
         return f"[{model_name}] {prompt}"
 
     def get_default_model(self) -> str:
