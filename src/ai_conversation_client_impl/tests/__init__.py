@@ -1,1 +1,1 @@
-"""Test package for AI conversation client implementation."""
+"""Unit Test package."""
