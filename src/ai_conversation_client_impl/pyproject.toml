@@ -2,7 +2,7 @@
 name = "ai_conversation_client_impl"
 version = "0.1.0"
 description = "AI Conversation Client Implementation"
-dependencies = ["pytest"]
+dependencies = ["pytest", "openai"]
 
 [tool.uv.dependencies]
 ai_conversation_client = { path = "../ai_conversation_client", develop = true }
