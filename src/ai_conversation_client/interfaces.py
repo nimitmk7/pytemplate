@@ -27,7 +27,7 @@ class Thread(ABC):
         Returns:
             The AI assistant's response.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def update_model(self, model_name: str) -> None:
@@ -36,7 +36,7 @@ class Thread(ABC):
         Args:
             model_name: The name of the model to use.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_id(self) -> str:
@@ -45,7 +45,7 @@ class Thread(ABC):
         Returns:
             The thread's unique ID.
         """
-        pass
+        pass # pragma: no cover
 
 
 class ModelProvider(ABC):
@@ -58,7 +58,7 @@ class ModelProvider(ABC):
         Returns:
             A list of model names as strings.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def generate_response(
@@ -79,7 +79,7 @@ class ModelProvider(ABC):
         Returns:
             The generated response.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_default_model(self) -> str:
@@ -97,7 +97,7 @@ class ThreadRepository(ABC):
         Args:
             thread: The thread to save.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_by_id(self, thread_id: str) -> Thread:
@@ -112,7 +112,7 @@ class ThreadRepository(ABC):
         Raises:
             ValueError: If no thread with the specified ID exists.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_all(self) -> list[Thread]:
@@ -121,7 +121,7 @@ class ThreadRepository(ABC):
         Returns:
             A list of all threads.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def delete(self, thread_id: str) -> None:
@@ -133,7 +133,7 @@ class ThreadRepository(ABC):
         Raises:
             ValueError: If no thread with the specified ID exists.
         """
-        pass
+        pass # pragma: no cover
 
 
 class AIConversationClient(ABC):
@@ -141,9 +141,7 @@ class AIConversationClient(ABC):
 
     @abstractmethod
     def __init__(
-        self,
-        model_provider: ModelProvider,
-        thread_repository: ThreadRepository,
+        self, model_provider: ModelProvider, thread_repository: ThreadRepository
     ) -> None:
         """Initialize the client with its dependencies.
 
@@ -151,7 +149,7 @@ class AIConversationClient(ABC):
             model_provider: Provider for AI model capabilities.
             thread_repository: Repository for storing and retrieving threads.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def create_thread(self) -> Thread:
@@ -160,7 +158,7 @@ class AIConversationClient(ABC):
         Returns:
             A new thread.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_thread(self, thread_id: str) -> Thread:
@@ -175,7 +173,7 @@ class AIConversationClient(ABC):
         Raises:
             ValueError: If no thread with the specified ID exists.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def get_all_threads(self) -> list[Thread]:
@@ -184,7 +182,7 @@ class AIConversationClient(ABC):
         Returns:
             A list of all threads.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def delete_thread(self, thread_id: str) -> None:
@@ -196,7 +194,7 @@ class AIConversationClient(ABC):
         Raises:
             ValueError: If no thread with the specified ID exists.
         """
-        pass
+        pass # pragma: no cover
 
     @abstractmethod
     def fetch_available_models(self) -> list[str]:
@@ -205,4 +203,4 @@ class AIConversationClient(ABC):
         Returns:
             A list of model names.
         """
-        pass
+        pass # pragma: no cover
