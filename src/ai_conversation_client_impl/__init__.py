@@ -2,9 +2,9 @@
 
 from .client import (
     ConcreteAIConversationClient,
-    OpenAIProvider,
     ConcreteThread,
     ConcreteThreadRepository,
+    OpenAIProvider,
 )
 
 __all__ = [

@@ -9,10 +9,11 @@ from ai_conversation_client_impl.client import (
 
 
 class DummyModelProvider(ModelProvider):
-    def __init__(self, available_models: list[str]):
+    def __init__(self, available_models: list[str]) -> None:
         self._models = available_models
 
     def get_available_models(self) -> list[str]:
+        """Return a list of available model names."""
         return self._models
 
     def generate_response(
@@ -22,9 +23,26 @@ class DummyModelProvider(ModelProvider):
         temperature: float = 0.7,
         max_tokens: int = 500,
     ) -> str:
+        """Generate a response using a dummy model.
+
+        Args:
+            model_name: The name of the model to use.
+            prompt: The input prompt to generate a response from.
+            temperature: The sampling temperature for response generation.
+            max_tokens: The maximum number of tokens to generate.
+
+        Returns:
+            A string representing the generated response.
+        """
+
         return f"[{model_name}] {prompt}"
 
     def get_default_model(self) -> str:
+        """Return the default model name.
+
+        Returns:
+            The name of the default model as a string.
+        """
         return self._models[0]
 
 
