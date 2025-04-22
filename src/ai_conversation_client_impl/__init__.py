@@ -1,5 +1,15 @@
-from .client import AIConversationClient, Thread, ModelProvider, ThreadRepository
+"""Public package for AI conversation client implementation."""
 
-__all__ = ["AIConversationClient", "Thread", "ModelProvider", "ThreadRepository"]
+from .client import (
+    ConcreteAIConversationClient,
+    OpenAIProvider,
+    ConcreteThread,
+    ConcreteThreadRepository,
+)
 
-
+__all__ = [
+    "ConcreteAIConversationClient",
+    "OpenAIProvider",
+    "ConcreteThread",
+    "ConcreteThreadRepository",
+]
