@@ -67,12 +67,18 @@ def test_update_thread_model(
     assert isinstance(concrete_thread, ConcreteThread)
     assert concrete_thread.model_name == available_models[1]
 
+    with pytest.raises(ValueError):
+        client.update_thread_model(thread.get_id(), "nonexistent_model")
+
 
 def test_get_thread(client: ConcreteAIConversationClient) -> None:
     """Test retrieving a specific thread by ID."""
     thread = client.create_thread()
     retrieved = client.get_thread(thread.get_id())
     assert retrieved is thread
+
+    with pytest.raises(ValueError):
+        retrieved = client.get_thread("nonexistent_id")
 
 
 def test_get_all_threads(client: ConcreteAIConversationClient) -> None:

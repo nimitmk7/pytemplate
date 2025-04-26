@@ -112,7 +112,10 @@ class ConcreteThread(ThreadInterface):
     def update_model(self, model_name: str) -> None:
         """Update the AI model used in this thread."""
         if model_name not in self.model_provider.get_available_models():
-            msg = f"Model {model_name} is not available."
+            msg = (
+                f"Model {model_name} is not available."
+                f"Available models: {self.model_provider.get_available_models()}"
+            )
             raise ValueError(msg)
         self.model_name = model_name
 
