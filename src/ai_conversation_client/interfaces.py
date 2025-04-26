@@ -204,16 +204,3 @@ class AIConversationClient(ABC):
             A list of model names.
         """
         pass # pragma: no cover
-
-    @abstractmethod
-    def update_thread_model(self, thread_id: str, model_name: str) -> None:
-        """Update the model used by a specific thread.
-
-        Args:
-            thread_id: The ID of the thread to update.
-            model_name: The new model name to use.
-
-        Raises:
-            ValueError: If the thread or model is not valid.
-        """
-        pass  # pragma: no cover

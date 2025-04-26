@@ -130,9 +130,6 @@ class DummyAIConversationClient(AIConversationClient):
         """Return the available model names."""
         return self._model_provider.get_available_models()
 
-    def update_thread_model(self, thread_id: str, model_name: str) -> None:
-        """Dummy implementation for interface compliance."""
-        pass
 
 class TestThread:
     """Tests for the Thread interface."""
