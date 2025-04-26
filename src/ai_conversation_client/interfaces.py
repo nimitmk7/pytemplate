@@ -11,16 +11,23 @@ class Thread(ABC):
     """A conversation thread between a user and an AI assistant."""
 
     @abstractmethod
-    def post(self, message: str) -> str:
+    def post(
+        self,
+        message: str,
+        temperature: float = 0.7,
+        max_tokens: int = 500,
+    ) -> str:
         """Post a message to the thread and get the AI's response.
 
         Args:
             message: The user's message to send to the AI.
+            temperature: Sampling temperature for the model.
+            max_tokens: Maximum tokens in the response.
 
         Returns:
             The AI assistant's response.
         """
-        pass # pragma: no cover
+        pass  # pragma: no cover
 
     @abstractmethod
     def update_model(self, model_name: str) -> None:
@@ -54,17 +61,30 @@ class ModelProvider(ABC):
         pass # pragma: no cover
 
     @abstractmethod
-    def generate_response(self, model_name: str, prompt: str) -> str:
+    def generate_response(
+        self,
+        model_name: str,
+        prompt: str,
+        temperature: float = 0.7,
+        max_tokens: int = 500,
+    ) -> str:
         """Generate a response using the specified model.
 
         Args:
             model_name: The name of the model to use.
             prompt: The prompt to send to the model.
+            temperature: Sampling temperature for the model.
+            max_tokens: Maximum number of tokens to generate.
 
         Returns:
             The generated response.
         """
         pass # pragma: no cover
+
+    @abstractmethod
+    def get_default_model(self) -> str:
+        """Return the default model name."""
+        pass
 
 
 class ThreadRepository(ABC):

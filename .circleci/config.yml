@@ -41,6 +41,8 @@ jobs:
           command: |
             source .venv/bin/activate
             uv pip install -e .[dev]
+            uv pip install ./src/ai_conversation_client_impl
+
       - run: 
           name: Check code formatting(ruff)
           command: |
