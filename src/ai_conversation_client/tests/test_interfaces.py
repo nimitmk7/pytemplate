@@ -116,6 +116,12 @@ class DummyAIConversationClient(AIConversationClient):
     def fetch_available_models(self) -> list[str]:
         """Get available models."""
         return self._model_provider.get_available_models()
+    
+    def update_thread_model(self, thread_id: str, model_name: str) -> None:
+        """Update the model for a specific thread."""
+        thread = self.get_thread(thread_id)
+        thread.update_model(model_name)
+        self._thread_repository.save(thread)
 
 
 # Tests for Thread interface
