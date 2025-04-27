@@ -10,6 +10,7 @@ Each component should be organized within its own subdirectory under the `src` d
 
 - **Directory Structure:**
   The component’s header and implementation files should reside in a subdirectory whose name matches the component. For example, for a component named **Calculator**, the structure should be:
+
 ```
 src/
     └── calculator/
@@ -173,6 +174,7 @@ class Calculator(calculator_interface.Calculator):
 ## Components in this Repository
 
 ### Calculator
+
 - **Purpose:** Performs basic arithmetic operations.
 - **Interface:**
   - `def add(self, a: float, b: float) -> float`
@@ -182,6 +184,7 @@ class Calculator(calculator_interface.Calculator):
 
 
 ### Logger
+
 - **Purpose:** Records operations performed by calculator.
 - **Interface:**
   - `def __init__(self) -> None`
@@ -190,6 +193,7 @@ class Calculator(calculator_interface.Calculator):
 
 
 ### Notifier
+
 - **Purpose:** Monitors calculation results and triggers notifications if a result exceeds a predefined threshold.
 - **Interface:**
   - `def check_and_notify(self, value: float) -> None`
