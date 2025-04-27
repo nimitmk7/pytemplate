@@ -8,8 +8,8 @@ from ai_conversation_client_impl.client import ConcreteThread, Role
 
 class MockModelProvider(ModelProvider):
     def __init__(self) -> None:
-        self._models = ["gpt-4", "gpt-3.5"]
-        self._response = "Mocked response"
+        self._models = ["gemini-pro", "gemini-1.5-pro"]
+        self._response = "Mocked Gemini response"
 
     def get_available_models(self) -> list[str]:
         """Return a list of available mock model names."""
@@ -42,11 +42,11 @@ def test_thread_initializes_with_system_message(thread: ConcreteThread) -> None:
 
 def test_thread_post_appends_user_and_response(thread: ConcreteThread) -> None:
     result = thread.post("Hello")
-    assert result == "Mocked response"
+    assert result == "Mocked Gemini response"
     assert thread.history[-2].role == Role.USER
     assert thread.history[-2].content == "Hello"
     assert thread.history[-1].role == Role.ASSISTANT
-    assert thread.history[-1].content == "Mocked response"
+    assert thread.history[-1].content == "Mocked Gemini response"
 
 
 def test_thread_get_id_returns_valid_uuid(thread: ConcreteThread) -> None:
@@ -56,8 +56,8 @@ def test_thread_get_id_returns_valid_uuid(thread: ConcreteThread) -> None:
 
 
 def test_thread_update_model_success(thread: ConcreteThread) -> None:
-    thread.update_model("gpt-3.5")
-    assert thread.model_name == "gpt-3.5"
+    thread.update_model("gemini-1.5-pro")
+    assert thread.model_name == "gemini-1.5-pro"
 
 
 def test_thread_update_model_invalid_raises(thread: ConcreteThread) -> None:

@@ -4,12 +4,12 @@ from .client import (
     ConcreteAIConversationClient,
     ConcreteThread,
     ConcreteThreadRepository,
-    OpenAIProvider,
+    GeminiProvider,
 )
 
 __all__ = [
     "ConcreteAIConversationClient",
-    "OpenAIProvider",
+    "GeminiProvider",
     "ConcreteThread",
     "ConcreteThreadRepository",
 ]

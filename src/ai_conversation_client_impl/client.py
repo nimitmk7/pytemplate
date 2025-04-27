@@ -5,7 +5,7 @@ import uuid
 from dataclasses import dataclass
 from typing import cast
 
-from openai import OpenAI
+import google.generativeai as genai
 
 from ai_conversation_client import (
     AIConversationClient as AIConversationClientInterface,
@@ -36,14 +36,15 @@ class Message:
     content: str
 
 
-class OpenAIProvider(ModelProviderInterface):
-    """Provides access to OpenAI models and responses."""
+class GeminiProvider(ModelProviderInterface):
+    """Provides access to Gemini models and responses."""
 
     def __init__(self, api_key: str, available_models: list[str]) -> None:
-        """Initialize the OpenAI provider."""
-        self.open_ai_client = OpenAI(api_key=api_key)
+        """Initialize the Gemini provider."""
+        genai.configure(api_key=api_key)
         self.available_models = available_models
-        self.default_model = available_models[0] if available_models else "gpt-4o"
+        self.default_model = available_models[0] if available_models else "gemini-pro"
+        self.model = genai.GenerativeModel(self.default_model)
 
     def get_available_models(self) -> list[str]:
         """Return the list of available model names."""
@@ -61,13 +62,20 @@ class OpenAIProvider(ModelProviderInterface):
             msg = f"Model {model_name} is not available."
             raise ValueError(msg)
 
-        chat_response = self.open_ai_client.chat.completions.create(
-            model=model_name,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature,
-            max_tokens=max_tokens,
+        # If model_name is different from current one, re-initialize
+        if model_name != self.default_model:
+            self.model = genai.GenerativeModel(model_name)
+            self.default_model = model_name
+
+        response = self.model.generate_content(
+            prompt,
+            generation_config={
+                "temperature": temperature,
+                "max_output_tokens": max_tokens,
+            }
         )
-        return cast(str, chat_response.choices[0].message.content).strip()
+
+        return cast(str, response.text).strip()
 
     def get_default_model(self) -> str:
         """Return the default model name."""

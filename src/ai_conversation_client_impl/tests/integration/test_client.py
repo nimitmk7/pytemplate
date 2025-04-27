@@ -9,20 +9,20 @@ from ai_conversation_client_impl.client import (
     ConcreteAIConversationClient,
     ConcreteThread,
     ConcreteThreadRepository,
-    OpenAIProvider,
+    GeminiProvider,
 )
 
 
 @pytest.fixture
 def available_models() -> list[str]:
     """Fixture for available models."""
-    return ["gpt-4", "gpt-3.5-turbo"]
+    return ["gemini-pro", "gemini-1.5-pro"]
 
 
 @pytest.fixture
-def model_provider(available_models: list[str]) -> OpenAIProvider:
-    """Fixture for OpenAIProvider with mocked API key."""
-    return OpenAIProvider(api_key="fake-api-key", available_models=available_models)
+def model_provider(available_models: list[str]) -> GeminiProvider:
+    """Fixture for GeminiProvider with mocked API key."""
+    return GeminiProvider(available_models=available_models, api_key="fake-api-key")
 
 
 @pytest.fixture
@@ -33,7 +33,7 @@ def thread_repository() -> ConcreteThreadRepository:
 
 @pytest.fixture
 def client(
-    model_provider: OpenAIProvider,
+    model_provider: GeminiProvider,
     thread_repository: ConcreteThreadRepository,
 ) -> ConcreteAIConversationClient:
     """Fixture for AI conversation client."""
@@ -47,14 +47,14 @@ def test_create_thread(client: ConcreteAIConversationClient) -> None:
     assert thread.get_id() in repo.threads
 
 
-@patch.object(OpenAIProvider, "generate_response", return_value="[gpt-4] Hello!")
+@patch.object(GeminiProvider, "generate_response", return_value="[gemini-pro] Hello!")
 def test_post_message(
     mock_generate_response: object, client: ConcreteAIConversationClient
 ) -> None:
     """Test posting a message returns the mocked response."""
     thread = client.create_thread()
     response = client.post_message_to_thread(thread.get_id(), "Hello!")
-    assert "[gpt-4] Hello!" in response
+    assert "[gemini-pro] Hello!" in response
 
 
 def test_update_thread_model(
@@ -63,7 +63,7 @@ def test_update_thread_model(
     """Test updating the thread's model name."""
     thread = client.create_thread()
     client.update_thread_model(thread.get_id(), available_models[1])
-    concrete_thread = thread  # already ConcreteThread
+    concrete_thread = thread
     assert isinstance(concrete_thread, ConcreteThread)
     assert concrete_thread.model_name == available_models[1]
 
@@ -78,7 +78,7 @@ def test_get_thread(client: ConcreteAIConversationClient) -> None:
     assert retrieved is thread
 
     with pytest.raises(ValueError):
-        retrieved = client.get_thread("nonexistent_id")
+        client.get_thread("nonexistent_id")
 
 
 def test_get_all_threads(client: ConcreteAIConversationClient) -> None:
