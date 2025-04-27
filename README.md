@@ -1,7 +1,7 @@
-# AI Conversation Client - Implementation
+# AI Conversation Client - Implementation (Gemini Version)
 
 This project implements a modular AI Conversation Client in Python.  
-It connects to AI providers (here we use OpenAI) and manages conversation threads in a clean, scalable, and testable way.
+It connects to AI providers (now using **Google Gemini**) and manages conversation threads in a clean, scalable, and testable way.
 
 ## Project Structure
 
@@ -13,12 +13,12 @@ src/
 │   └── tests/
 │       └── unit/
 │           └── test_interfaces.py
-├── ai_conversation_client_impl/       # Concrete Implementations (HW3)
+├── ai_conversation_client_impl/       # Concrete Implementations (HW3 with Gemini)
 │   ├── __init__.py
-│   ├── client.py                      # Main implementation
+│   ├── client.py                      # Main implementation (GeminiProvider)
 │   └── tests/
 │       ├── unit/
-│           ├── test_openai_provider.py
+│           ├── test_gemini_provider.py
 │           ├── test_repository.py
 │           └── test_thread.py
 │       └── integration/
@@ -43,16 +43,23 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv pip install -e ".[dev]"
 ```
 
-Make sure you have a `.env` file or set your OpenAI API key:
+Create a `.env` file at the root with your Gemini API key:
+
 ```bash
-OPENAI_API_KEY=your-openai-api-key
+GEMINI_API_KEY=your-gemini-api-key
+```
+
+Or export it manually:
+
+```bash
+export GEMINI_API_KEY=your-gemini-api-key
 ```
 
 ## Components
 
 | Component | Description |
 |:---|:---|
-| `OpenAIProvider` | Connects to the OpenAI API and fetches model completions. |
+| `GeminiProvider` | Connects to the Gemini API and fetches model completions. |
 | `ConcreteThread` | Represents an individual conversation thread with a model and message history. |
 | `ConcreteThreadRepository` | Stores, retrieves, updates, and deletes conversation threads in memory. |
 | `ConcreteAIConversationClient` | Public client API for managing threads, posting messages, updating models, and interacting with the provider. |
@@ -62,8 +69,8 @@ OPENAI_API_KEY=your-openai-api-key
 - **Thread Management**: Create, retrieve, list, and delete conversation threads.
 - **Model Management**: Update thread models dynamically.
 - **Messaging**: Post a message and get AI-generated responses.
-- **Provider Integration**: Plug in OpenAI (extendable for other providers).
-- **Error Handling**: Raise `ValueError` for invalid operations.
+- **Provider Integration**: Plugs into Gemini API (extensible to other providers).
+- **Error Handling**: Raises `ValueError` for invalid operations.
 - **Extensible Design**: Easily swap in new providers or repositories.
 
 ## Running Tests
@@ -74,9 +81,15 @@ pytest src
 
 # Check coverage
 pytest --cov=src
+```
 
-# Linting and static checks
+## Linting and Static Checks
+
+```bash
+# Ruff (formatting)
 uvx ruff check .
+
+# Mypy (static type checking)
 uvx mypy .
 ```
 
@@ -91,16 +104,11 @@ All tests must pass and coverage should remain **≥ 90%**.
   - Pytest unit and integration tests
   - Coverage report (threshold enforced)
 
-To check CI locally:
+To run CI checks locally:
 
 ```bash
-# Ruff (formatting)
 uvx ruff check .
-
-# Mypy (typing)
 uvx mypy .
-
-# Pytest (tests)
 pytest src --cov=src
 ```
 
@@ -108,7 +116,6 @@ pytest src --cov=src
 
 - Unit tests are separated from integration tests.
 - Dummy mocks are used for unit tests to avoid real API calls.
-- Integration tests test the full working of ConcreteAIConversationClient.
+- Integration tests test the full working of `ConcreteAIConversationClient`.
 - API errors (e.g., invalid models, missing threads) are properly surfaced.
-
-
+- GeminiProvider reads API key from the environment with fallback for testing.
