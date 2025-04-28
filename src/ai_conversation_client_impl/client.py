@@ -1,6 +1,8 @@
 """Implementation of the AI Conversation Client."""
 
 import enum
+
+import os
 import uuid
 from dataclasses import dataclass
 from typing import cast
@@ -39,8 +41,13 @@ class Message:
 class GeminiProvider(ModelProviderInterface):
     """Provides access to Gemini models and responses."""
 
-    def __init__(self, api_key: str, available_models: list[str]) -> None:
+    def __init__(self, available_models: list[str], api_key: str | None = None) -> None:
         """Initialize the Gemini provider."""
+        if api_key is None:
+            api_key = os.getenv("GEMINI_API_KEY")
+        if api_key is None:
+            raise ValueError("GEMINI_API_KEY not set in the environment")
+
         genai.configure(api_key=api_key)
         self.available_models = available_models
         self.default_model = available_models[0] if available_models else "gemini-pro"
