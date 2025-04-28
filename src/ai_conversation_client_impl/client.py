@@ -1,7 +1,6 @@
 """Implementation of the AI Conversation Client."""
 
 import enum
-
 import os
 import uuid
 from dataclasses import dataclass
