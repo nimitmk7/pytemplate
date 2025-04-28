@@ -1,4 +1,4 @@
-# AI Conversation Client - Implementation (Gemini Version)
+# AI Conversation Client - HW4 Integration Step 1: Public API and Factory Layer (Gemini Version)
 
 This project implements a modular AI Conversation Client in Python.  
 It connects to AI providers (now using **Google Gemini**) and manages conversation threads in a clean, scalable, and testable way.
@@ -10,9 +10,12 @@ src/
 ├── ai_conversation_client/            # Abstract Interfaces (HW2)
 │   ├── __init__.py
 │   ├── interfaces.py
+│   ├── api.py                     # Public API layer (HW4)
+│   ├── factory.py                  # Factory layer (HW4)
 │   └── tests/
-│       └── unit/
-│           └── test_interfaces.py
+│       ├── test_interfaces.py
+│       ├── test_api.py             # Unit test for api.py (HW4)
+│       └── test_factory.py         # Unit test for factory.py (HW4)
 ├── ai_conversation_client_impl/       # Concrete Implementations (HW3 with Gemini)
 │   ├── __init__.py
 │   ├── client.py                      # Main implementation (GeminiProvider)
@@ -63,6 +66,8 @@ export GEMINI_API_KEY=your-gemini-api-key
 | `ConcreteThread` | Represents an individual conversation thread with a model and message history. |
 | `ConcreteThreadRepository` | Stores, retrieves, updates, and deletes conversation threads in memory. |
 | `ConcreteAIConversationClient` | Public client API for managing threads, posting messages, updating models, and interacting with the provider. |
+| `api.py` | Exposes a simple public API wrapping the client for easy use in apps (HW4). |
+| `factory.py` | Provides a standard way to create the conversation client, wiring provider + repository (HW4). |
 
 ## Features
 
@@ -119,3 +124,4 @@ pytest src --cov=src
 - Integration tests test the full working of `ConcreteAIConversationClient`.
 - API errors (e.g., invalid models, missing threads) are properly surfaced.
 - GeminiProvider reads API key from the environment with fallback for testing.
+- Public API (`api.py`) and Factory (`factory.py`) layers are added for clean integration into larger applications as part of HW4.
