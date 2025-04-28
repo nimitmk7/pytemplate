@@ -1,0 +1,8 @@
+[submodule "src/src"]
+	path = src/src
+	url = https://github.com/Awek-015/OSPSD.git
+	branch = gmail-implementation
+[submodule "src/gmail_client"]
+	path = src/gmail_client
+	url = https://github.com/Awek-015/OSPSD.git
+	branch = gmail-implementation
