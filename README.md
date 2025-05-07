@@ -8,39 +8,21 @@ This project implements a Gmail email crawler combined with an AI-powered spam d
 
 ```
 src/
-├── ai_conversation_client/            # Abstract Interfaces (HW2)
+├── mail_ai_app/                  # Main mail AI application
 │   ├── __init__.py
-│   ├── interfaces.py
-│   ├── api.py                     # Public API layer (HW4)
-│   ├── factory.py                  # Factory layer (HW4)
-│   └── tests/
-│       ├── test_interfaces.py
-│       ├── test_api.py             # Unit test for api.py (HW4)
-│       └── test_factory.py         # Unit test for factory.py (HW4)
-├── ai_conversation_client_impl/       # Concrete Implementations (HW3 with Gemini)
-│   ├── __init__.py
-│   ├── client.py                      # Main implementation (GeminiProvider)
-│   └── tests/
-│       ├── unit/
-│           ├── test_gemini_provider.py
-│           ├── test_repository.py
-│           └── test_thread.py
-│       └── integration/
-│           └── test_client.py
-├── mail_ai_app/                  # New main app (HW4 final integration)
-│   ├── __init__.py
-│   ├── main.py
-│   └── prompt_utils.py
-└── gmail/                        # copied from external submodule placed in external/gmail_client
-    ├── mail_api/
-    │   └── __init__.py
-    └── mail_gmail_impl/
-        ├── __init__.py
-        ├── gmail_client.py
-        ├── gmail_message.py
-        ├── gmail_attachment.py
-.circleci/
-    └── config.yml                      # CI pipeline
+│   ├── main.py                   # Main entry point for email crawling and spam detection
+│   ├── prompt_utils.py           # Utilities for prompt construction and processing
+│   └── tests/                    # Unit and integration tests for mail_ai_app
+│       ├── test_main.py
+│       └── test_prompt_utils.py
+tests/
+├── unit/
+│   ├── test_mail_ai_app.py
+│   └── test_other_modules.py
+└── e2e/
+    └── test_integration_mail_ai.py    # End-to-end integration test for mail AI app
+external/
+└── gmail_client/                 # External Gmail client submodule
 ```
 
 ## Installation
@@ -73,14 +55,11 @@ export GEMINI_API_KEY=your-gemini-api-key
 
 ## Components
 
-| Component | Description |
-|:---|:---|
-| `GeminiProvider` | Connects to the Gemini API and fetches model completions. |
-| `ConcreteThread` | Represents an individual conversation thread with a model and message history. |
-| `ConcreteThreadRepository` | Stores, retrieves, updates, and deletes conversation threads in memory. |
-| `ConcreteAIConversationClient` | Public client API for managing threads, posting messages, updating models, and interacting with the provider. |
-| `api.py` | Exposes a simple public API wrapping the client for easy use in apps (HW4). |
-| `factory.py` | Provides a standard way to create the conversation client, wiring provider + repository (HW4). |
+The Mail-AI application consists of the following key components inside `mail_ai_app/`:
+
+- `main.py`: The main script that crawls Gmail inbox emails, sends them to the AI conversation client for spam probability estimation, and outputs results to a CSV file.
+- `prompt_utils.py`: Helper functions for constructing prompts and processing AI responses related to spam detection.
+- `tests/`: Contains unit and integration tests ensuring the correctness of the mail AI app functionality.
 
 ## Main Application: Email Spam Detection
 
@@ -97,17 +76,13 @@ export TEST_EMAIL=your-email@gmail.com
 python src/mail_ai_app/main.py
 ```
 
-Users will be prompted to enter how many emails to process.  
-Please ensure that `credentials.json` and `token.json` are locally available for Gmail API authentication.
+After running the application, you will be prompted to enter how many emails to process. Upon completion, an `email_spam_analysis.csv` file will be generated containing columns: `mail_id`, `Pct_spam`, `subject`, and `date`.
 
 ## Features
 
-- **Thread Management**: Create, retrieve, list, and delete conversation threads.
-- **Model Management**: Update thread models dynamically.
-- **Messaging**: Post a message and get AI-generated responses.
-- **Provider Integration**: Plugs into Gemini API (extensible to other providers).
-- **Error Handling**: Raises `ValueError` for invalid operations.
-- **Extensible Design**: Easily swap in new providers or repositories.
+- Crawl Gmail inbox emails using the Gmail client.
+- Send each email content to the AI conversation client to predict spam probability.
+- Aggregate and export the analysis results to a CSV file for further inspection.
 
 ## Running Tests
 
