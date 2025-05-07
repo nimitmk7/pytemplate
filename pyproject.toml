@@ -44,8 +44,6 @@ disallow_incomplete_defs = true
 ignore_missing_imports = true
 allow_untyped_decorators = true
 strict = true
-<<<<<<< Updated upstream
-=======
 exclude = [
     "external/gmail_client/.*",
     "src/gmail/.*",
@@ -72,7 +70,6 @@ exclude = [
     "external/gmail_client/**",
     "src/gmail/**",
 ]
->>>>>>> Stashed changes
 
 [tool.ruff.lint]
 ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D103", "D404", "D413", "D205", "D210", "D100", "D107", "ANN101"]
