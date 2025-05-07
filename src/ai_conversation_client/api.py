@@ -1,3 +1,9 @@
+"""This module provides a simple API for interacting with the AI conversation client.
+
+It includes functions for creating threads, posting messages, updating models,
+retrieving and deleting threads, and listing available models. The API is designed
+to offer a straightforward interface for managing AI-powered conversation threads.
+"""
 from ai_conversation_client_impl.client import (
     ConcreteAIConversationClient,
     ConcreteThreadRepository,
