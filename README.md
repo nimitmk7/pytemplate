@@ -1,7 +1,8 @@
-# AI Conversation Client - HW4 Integration Step 1: Public API and Factory Layer (Gemini Version)
+# Mail-AI Spam Detection App
 
-This project implements a modular AI Conversation Client in Python.  
-It connects to AI providers (now using **Google Gemini**) and manages conversation threads in a clean, scalable, and testable way.
+This project implements a Gmail email crawler combined with an AI-powered spam detection client. It integrates a custom Gmail client and a conversation AI (Gemini) to classify incoming emails based on spam probability.
+
+---
 
 ## Project Structure
 
@@ -26,6 +27,18 @@ src/
 │           └── test_thread.py
 │       └── integration/
 │           └── test_client.py
+├── mail_ai_app/                  # New main app (HW4 final integration)
+│   ├── __init__.py
+│   ├── main.py
+│   └── prompt_utils.py
+└── gmail/                        # copied from external submodule placed in external/gmail_client
+    ├── mail_api/
+    │   └── __init__.py
+    └── mail_gmail_impl/
+        ├── __init__.py
+        ├── gmail_client.py
+        ├── gmail_message.py
+        ├── gmail_attachment.py
 .circleci/
     └── config.yml                      # CI pipeline
 ```
@@ -68,6 +81,24 @@ export GEMINI_API_KEY=your-gemini-api-key
 | `ConcreteAIConversationClient` | Public client API for managing threads, posting messages, updating models, and interacting with the provider. |
 | `api.py` | Exposes a simple public API wrapping the client for easy use in apps (HW4). |
 | `factory.py` | Provides a standard way to create the conversation client, wiring provider + repository (HW4). |
+
+## Main Application: Email Spam Detection
+
+The main application crawls Gmail inbox emails and sends each email to the AI conversation client to estimate the probability of being spam. It outputs a CSV file named `email_spam_analysis.csv` containing the following columns: `mail_id`, `Pct_spam`, `subject`, and `date`.
+
+## Running the Main App
+
+```bash
+# Ensure environment variables are set
+export GEMINI_API_KEY=your-gemini-api-key
+export TEST_EMAIL=your-email@gmail.com
+
+# Run the main app
+python src/mail_ai_app/main.py
+```
+
+Users will be prompted to enter how many emails to process.  
+Please ensure that `credentials.json` and `token.json` are locally available for Gmail API authentication.
 
 ## Features
 
