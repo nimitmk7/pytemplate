@@ -27,10 +27,13 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["src", "tests"]
+testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "--cov=src --cov-report=xml --cov-report=term"
-
+norecursedirs = [
+    "external/gmail_client",
+    "src/gmail",
+]
 
 [tool.mypy]
 python_version = "3.12"
@@ -41,13 +44,52 @@ disallow_incomplete_defs = true
 ignore_missing_imports = true
 allow_untyped_decorators = true
 strict = true
+<<<<<<< Updated upstream
+=======
+exclude = [
+    "external/gmail_client/.*",
+    "src/gmail/.*",
+]
+
+[[tool.mypy.overrides]]
+module = "external.gmail_client.mail_gmail_impl.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "external.gmail_client.mail_api"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "gmail.mail_gmail_impl.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "gmail.mail_api"
+ignore_errors = true
+
+[tool.ruff]
+exclude = [
+    "external/gmail_client/**",
+    "src/gmail/**",
+]
+>>>>>>> Stashed changes
 
 [tool.ruff.lint]
 ignore = ["D203", "D213", "TRY003", "EM101", "D101", "D103", "D404", "D413", "D205", "D210", "D100", "D107", "ANN101"]
 select = ["D", "E", "F", "ANN", "UP", "TRY", "EM", "W", "I"]
+exclude = [
+    "external/gmail_client/**",
+    "src/gmail/**",
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
+
+[tool.coverage.run]
+omit = [
+    "external/gmail_client/*",
+    "src/gmail/*",
+]
