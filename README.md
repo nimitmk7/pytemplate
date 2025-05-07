@@ -120,7 +120,7 @@ To run CI checks locally:
 ```bash
 uvx ruff check .
 uvx mypy .
-pytest src --cov=src
+pytest tests src --cov=src
 ```
 
 ## Notes
