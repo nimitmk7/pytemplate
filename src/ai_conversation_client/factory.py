@@ -17,14 +17,15 @@ from ai_conversation_client_impl.client import (
 def create_client() -> ConcreteAIConversationClient:
     """Create and return a configured ConcreteAIConversationClient.
 
-    This function initializes the underlying GeminiProvider and ConcreteThreadRepository,
-    and binds them together to form a ConcreteAIConversationClient instance.
+    This function sets up the GeminiProvider with the available AI models and API key,
+    initializes a ConcreteThreadRepository for managing conversation threads,
+    and binds them together into a ConcreteAIConversationClient instance.
 
     Returns:
-        ConcreteAIConversationClient: The client ready for use.
+        ConcreteAIConversationClient: A fully configured AI conversation client.
 
     Raises:
-        ValueError: If the GEMINI_API_KEY environment variable is not set.
+        ValueError: If the GEMINI_API_KEY environment variable is missing.
     """
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
