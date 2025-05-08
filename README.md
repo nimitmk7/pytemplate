@@ -12,13 +12,7 @@ src/
 │   ├── __init__.py
 │   ├── main.py                   # Main entry point for email crawling and spam detection
 │   ├── prompt_utils.py           # Utilities for prompt construction and processing
-│   └── tests/                    # Unit and integration tests for mail_ai_app
-│       ├── test_main.py
-│       └── test_prompt_utils.py
 tests/
-├── unit/
-│   ├── test_mail_ai_app.py
-│   └── test_other_modules.py
 └── e2e/
     └── test_integration_mail_ai.py    # End-to-end integration test for mail AI app
 external/
