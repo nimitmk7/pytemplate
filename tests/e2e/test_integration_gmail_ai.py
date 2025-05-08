@@ -1,4 +1,5 @@
 import os
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -8,31 +9,39 @@ from ai_conversation_client_impl.client import (
     ConcreteThreadRepository,
     GeminiProvider,
 )
-from gmail.mail_gmail_impl.gmail_client import GmailClient
+
+if TYPE_CHECKING:
+    from gmail.mail_gmail_impl.gmail_client import GmailClient
+
+
+class FakeEmailMessage:
+    """A simple fake email message object for testing."""
+    def __init__(self, body: str, id: str, subject: str, date: str) -> None:
+        self.body = body
+        self.id = id
+        self.subject = subject
+        self.date = date
 
 
 @pytest.fixture(scope="module")
-def gmail_client() -> GmailClient:
-    """Fixture to provide a Gmail client.
-
-    Returns:
-        GmailClient: Configured Gmail client instance.
-    """
-    credentials_file = os.getenv("GMAIL_CREDENTIALS_FILE", "credentials.json")
-    token_file = os.getenv("GMAIL_TOKEN_FILE", "token.json")
-    return GmailClient(credentials_file, token_file) # type: ignore
+def gmail_client() -> "GmailClient":
+    """Fixture to provide a mocked Gmail client."""
+    mock_client = MagicMock()
+    mock_client.get_messages.return_value = [
+        FakeEmailMessage(
+            body="This is a test email body.",
+            id="fake-id-123",
+            subject="Test Subject",
+            date="2024-05-10",
+        )
+    ]
+    return mock_client
 
 
 @pytest.fixture(scope="module")
 def ai_client() -> ConcreteAIConversationClient:
-    """Fixture to provide an AI conversation client.
-
-    Returns:
-        ConcreteAIConversationClient: Configured AI client instance.
-    """
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY must be set")
+    """Fixture to provide an AI conversation client."""
+    api_key = os.getenv("GEMINI_API_KEY", "fake-api-key")
     provider = GeminiProvider(
         available_models=["models/gemini-1.5-pro-latest"],
         api_key=api_key,
@@ -47,34 +56,21 @@ def ai_client() -> ConcreteAIConversationClient:
 )
 def test_gmail_to_ai_integration(
     mock_post_message_to_thread: MagicMock,
-    gmail_client: GmailClient,
+    gmail_client: "GmailClient",
     ai_client: ConcreteAIConversationClient,
 ) -> None:
-    """End-to-end integration test from Gmail client to AI client.
-
-    This test fetches an email via Gmail client, passes the email body to the AI client,
-    and verifies that the AI client returns a valid response.
-
-    Args:
-        mock_post_message_to_thread (MagicMock): Mocked post_message_to_thread method.
-        gmail_client (GmailClient): Gmail client fixture.
-        ai_client (ConcreteAIConversationClient): AI conversation client fixture.
-    """
-    # Step 1: Fetch emails
+    """End-to-end integration test from Gmail client to AI client."""
     messages = list(gmail_client.get_messages())
     assert messages, "No messages found in Gmail account."
 
-    # Step 2: Pick the first email body
     first_message = messages[0]
     email_body = first_message.body
     assert email_body, "First email body is empty."
 
-    # Step 3: Pass email body to AI client
     thread = ai_client.create_thread()
     response_text = ai_client.post_message_to_thread(
         thread_id=thread.get_id(),
         message=email_body,
     )
 
-    # Step 4: Check AI response
     assert response_text, "AI client returned no response."

@@ -52,13 +52,13 @@ jobs:
           name: Run static analuysis(mypy)
           command: |
             source .venv/bin/activate
-            uvx mypy src/
+            uvx mypy src/ 
       - run:
           name: Run tests
           command: |
             source .venv/bin/activate
             mkdir -p test-results
-            pytest tests src --cov=src --cov=tests --cov-report=xml --cov-report=term --junitxml=test-results/junit.xml
+            pytest src tests --cov=src --cov-report=xml --cov-report=term --junitxml=test-results/junit.xml
             coverage html -d coverage-unit
       - run:
           name: Enforce Coverage Threshold

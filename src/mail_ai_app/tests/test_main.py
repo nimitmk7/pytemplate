@@ -6,17 +6,18 @@ import pytest
 from mail_ai_app.main import process_emails
 
 
-@pytest.fixture
-def fake_gmail_messages() -> list[object]:
-    """Fixture that returns fake Gmail messages."""
-    class FakeMessage:
-        """A fake message mimicking the real Gmail message object."""
-        def __init__(self, id: str, body: str, subject: str, date: str) -> None:
-            self.id = id
-            self.body = body
-            self.subject = subject
-            self.date = date
+class FakeMessage:
+    """A fake message mimicking the real Gmail message object."""
+    def __init__(self, id: str, body: str, subject: str, date: str) -> None:
+        self.id = id
+        self.body = body
+        self.subject = subject
+        self.date = date
 
+
+@pytest.fixture
+def fake_gmail_messages() -> list[FakeMessage]:
+    """Fixture that returns fake Gmail messages."""
     return [
         FakeMessage(
             id="id1",
@@ -33,21 +34,21 @@ def fake_gmail_messages() -> list[object]:
     ]
 
 
-@patch("mail_ai_app.main.input", return_value="2")
-@patch("mail_ai_app.main.GmailClient")
 @patch("mail_ai_app.main.ConcreteAIConversationClient")
+@patch("mail_ai_app.main.GmailClient")
+@patch("mail_ai_app.main.input", return_value="2")
 def test_process_emails_success(
-    mock_ai_client_cls: MagicMock,
-    mock_gmail_client_cls: MagicMock,
     mock_input: MagicMock,
-    fake_gmail_messages: list[object],
+    mock_gmail_client_cls: MagicMock,
+    mock_ai_client_cls: MagicMock,
+    fake_gmail_messages: list[FakeMessage],
 ) -> None:
     """Test successful email processing flow."""
-    mock_gmail_client = MagicMock()
+    mock_gmail_client: MagicMock = MagicMock()
     mock_gmail_client.get_messages.return_value = iter(fake_gmail_messages)
     mock_gmail_client_cls.return_value = mock_gmail_client
 
-    mock_ai_client = MagicMock()
+    mock_ai_client: MagicMock = MagicMock()
     mock_ai_client.post_message_to_thread.return_value = "0.3"
     mock_ai_client_cls.return_value = mock_ai_client
 

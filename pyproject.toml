@@ -26,11 +26,6 @@ dev = [
     "ruff>=0.1.5",
 ]
 
-gmail = [
-  "google-auth-oauthlib>=1.0.0",
-  "google-api-python-client>=2.0.0"
-]
-
 [tool.pytest.ini_options]
 testpaths = ["src", "tests"]
 python_files = "test_*.py"
@@ -91,6 +86,7 @@ convention = "google"
 packages = ["src"]
 
 [tool.coverage.run]
+source = ["src"]
 omit = [
     "external/gmail_client/*",
     "src/gmail/*",
