@@ -1,3 +1,2 @@
 mail_id,Pct_spam,subject,date
-id1,0.3,Subject 1,2024-05-10
-id2,0.3,Subject 2,2024-05-11
+email1,1.0,Test Subject,2024-01-01

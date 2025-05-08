@@ -90,4 +90,5 @@ source = ["src"]
 omit = [
     "external/gmail_client/*",
     "src/gmail/*",
+    "src/mail_ai_app/main.py",
 ]

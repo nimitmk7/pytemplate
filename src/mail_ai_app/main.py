@@ -23,47 +23,56 @@ def _raise_positive_integer_error() -> None:
     raise ValueError("The number of emails must be a positive integer.")
 
 
-def process_emails() -> None:
+def process_emails(
+    gmail_client: GmailClient | None = None,
+    ai_client: ConcreteAIConversationClient | None = None,
+    max_emails: int | None = None,
+) -> None:
     """Crawls mailbox using GmailClient, sends each email body to AIConversationClient
     with a spam-checking prompt, parses the AI's response for spam probability,
     and outputs a CSV with mail_id, Pct_spam, subject, and date columns.
     """
     print("Starting email processing...")
 
-    # Initialize Gmail client (using credentials.json, token.json)
-    try:
-        gmail_client = GmailClient()  # type: ignore
-    except Exception as e:
-        print(f"Failed to initialize Gmail client: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Initialize Gmail client (using credentials.json, token.json) if not provided
+    if gmail_client is None:
+        try:
+            gmail_client = GmailClient()  # type: ignore
+        except Exception as e:
+            print(f"Failed to initialize Gmail client: {e}", file=sys.stderr)
+            sys.exit(1)
 
-    # Initialize AI conversation client using Gemini
-    gemini_api_key = os.getenv("GEMINI_API_KEY")
-    if gemini_api_key is None:
-        error_msg = "Error: GEMINI_API_KEY must be set in environment variables."
-        print(error_msg, file=sys.stderr)
-        sys.exit(1)
+    # Initialize AI conversation client using Gemini if not provided
+    if ai_client is None:
+        gemini_api_key = os.getenv("GEMINI_API_KEY")
+        if gemini_api_key is None:
+            error_msg = "Error: GEMINI_API_KEY must be set in environment variables."
+            print(error_msg, file=sys.stderr)
+            sys.exit(1)
 
-    model_provider = GeminiProvider(
-        available_models=["gemini-2.0-flash"],
-        api_key=gemini_api_key,
-    )
-    thread_repository = ConcreteThreadRepository()
-    ai_client = ConcreteAIConversationClient(
-        model_provider=model_provider,
-        thread_repository=thread_repository,
-    )
+        model_provider = GeminiProvider(
+            available_models=["gemini-2.0-flash"],
+            api_key=gemini_api_key,
+        )
+        thread_repository = ConcreteThreadRepository()
+        ai_client = ConcreteAIConversationClient(
+            model_provider=model_provider,
+            thread_repository=thread_repository,
+        )
 
-    # Ask user how many emails to process
-    try:
-        max_emails_input = input("Enter the number of emails to process: ")
-        max_emails = int(max_emails_input)
-        if max_emails <= 0:
-            _raise_positive_integer_error()
-    except ValueError:
-        error_msg = "Please enter a valid positive integer for the number of emails."
-        print(error_msg, file=sys.stderr)
-        sys.exit(1)
+    # Ask user how many emails to process if not provided
+    if max_emails is None:
+        try:
+            max_emails_input = input("Enter the number of emails to process: ")
+            max_emails = int(max_emails_input)
+            if max_emails <= 0:
+                _raise_positive_integer_error()
+        except ValueError:
+            error_msg = (
+                "Please enter a valid positive integer for the number of emails."
+            )
+            print(error_msg, file=sys.stderr)
+            sys.exit(1)
 
     results: list[dict[str, str]] = []
 
