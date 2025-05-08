@@ -47,10 +47,10 @@ class GeminiProvider(ModelProviderInterface):
         if api_key is None:
             raise ValueError("GEMINI_API_KEY not set in the environment")
 
-        genai.configure(api_key=api_key) # type: ignore
+        genai.configure(api_key=api_key)
         self.available_models = available_models
         self.default_model = available_models[0] if available_models else "gemini-pro"
-        self.model = genai.GenerativeModel(self.default_model) # type: ignore
+        self.model = genai.GenerativeModel(self.default_model)
 
     def get_available_models(self) -> list[str]:
         """Return the list of available model names."""
@@ -70,7 +70,7 @@ class GeminiProvider(ModelProviderInterface):
 
         # If model_name is different from current one, re-initialize
         if model_name != self.default_model:
-            self.model = genai.GenerativeModel(model_name) # type: ignore
+            self.model = genai.GenerativeModel(model_name)
             self.default_model = model_name
 
         response = self.model.generate_content(
