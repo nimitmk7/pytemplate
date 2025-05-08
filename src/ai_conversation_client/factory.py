@@ -7,12 +7,15 @@ API key from environment variables and prepares the AI models for the provider.
 
 import os
 
+from dotenv import load_dotenv
+
 from ai_conversation_client_impl.client import (
     ConcreteAIConversationClient,
     ConcreteThreadRepository,
     GeminiProvider,
 )
 
+load_dotenv()
 
 def create_client() -> ConcreteAIConversationClient:
     """Create and return a configured ConcreteAIConversationClient.
@@ -31,7 +34,7 @@ def create_client() -> ConcreteAIConversationClient:
     if not api_key:
         raise ValueError("GEMINI_API_KEY not set in the environment")
 
-    available_models = ["models/gemini-1.5-pro-latest"]  # or other valid models
+    available_models = ["models/gemini-2.0-flash-lite"]  # or other valid models
 
     provider = GeminiProvider(available_models=available_models, api_key=api_key)
     repository = ConcreteThreadRepository()

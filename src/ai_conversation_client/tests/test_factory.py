@@ -18,4 +18,4 @@ def test_create_client() -> None:
     assert isinstance(client, ConcreteAIConversationClient)
 
     models = client.fetch_available_models()
-    assert "models/gemini-1.5-pro-latest" in models
+    assert "models/gemini-2.0-flash-lite" in models
