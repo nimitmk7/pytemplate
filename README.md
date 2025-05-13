@@ -1,18 +1,23 @@
-# AI Conversation Client - Implementation (Gemini Version)
+# AI Conversation Client - HW4 Integration Progress: Public API, Factory Layer, and Gmail Client Submodule
 
 This project implements a modular AI Conversation Client in Python.  
 It connects to AI providers (now using **Google Gemini**) and manages conversation threads in a clean, scalable, and testable way.
 
-## Project Structure
+As part of the HW4 integration, we have added **TEAM 5's Gmail Client repository as a Git submodule**, enabling email crawling functionality integrated with the conversation client.
+
+## Project Structure (Including HW4 Integration Progress)
 
 ```
 src/
 ├── ai_conversation_client/            # Abstract Interfaces (HW2)
 │   ├── __init__.py
 │   ├── interfaces.py
+│   ├── api.py                     # Public API layer (HW4)
+│   ├── factory.py                  # Factory layer (HW4)
 │   └── tests/
-│       └── unit/
-│           └── test_interfaces.py
+│       ├── test_interfaces.py
+│       ├── test_api.py             # Unit test for api.py (HW4)
+│       └── test_factory.py         # Unit test for factory.py (HW4)
 ├── ai_conversation_client_impl/       # Concrete Implementations (HW3 with Gemini)
 │   ├── __init__.py
 │   ├── client.py                      # Main implementation (GeminiProvider)
@@ -23,16 +28,19 @@ src/
 │           └── test_thread.py
 │       └── integration/
 │           └── test_client.py
+├── gmail_client/                      # TEAM 5's Gmail Client Submodule (HW4)
 .circleci/
     └── config.yml                      # CI pipeline
 ```
 
-## Installation
+## Installation and Setup (Including Submodule Initialization)
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd <your-repo-directory>
+# Clone the repository with submodules
+git clone --recurse-submodules https://github.com/nimitmk7/pytemplate.git
+
+# If already cloned without submodules, initialize and update them:
+git submodule update --init --recursive
 
 # Set up a virtual environment
 python -m venv .venv
@@ -55,6 +63,15 @@ Or export it manually:
 export GEMINI_API_KEY=your-gemini-api-key
 ```
 
+## HW4 Integration Final Goal
+
+- **Email Crawling**: Use TEAM 5's Gmail Client submodule to crawl emails.
+- **Conversation Client Integration**: Send crawled email content to the AI Conversation Client.
+- **Spam Detection**: Analyze emails for spam probability using AI models.
+- **Output**: Generate CSV reports summarizing email analysis and spam scores.
+
+This integration enables automated processing of emails with AI-powered conversation and classification.
+
 ## Components
 
 | Component | Description |
@@ -63,6 +80,9 @@ export GEMINI_API_KEY=your-gemini-api-key
 | `ConcreteThread` | Represents an individual conversation thread with a model and message history. |
 | `ConcreteThreadRepository` | Stores, retrieves, updates, and deletes conversation threads in memory. |
 | `ConcreteAIConversationClient` | Public client API for managing threads, posting messages, updating models, and interacting with the provider. |
+| `api.py` | Exposes a simple public API wrapping the client for easy use in apps (HW4). |
+| `factory.py` | Provides a standard way to create the conversation client, wiring provider + repository (HW4). |
+| `gmail_client/` | TEAM 5's Gmail Client submodule for email crawling and management (HW4). |
 
 ## Features
 
@@ -70,6 +90,9 @@ export GEMINI_API_KEY=your-gemini-api-key
 - **Model Management**: Update thread models dynamically.
 - **Messaging**: Post a message and get AI-generated responses.
 - **Provider Integration**: Plugs into Gemini API (extensible to other providers).
+- **Email Crawling**: Fetch emails via the Gmail Client submodule.
+- **Spam Analysis**: Detect spam probability using AI conversation client.
+- **CSV Output**: Export analyzed data for reporting.
 - **Error Handling**: Raises `ValueError` for invalid operations.
 - **Extensible Design**: Easily swap in new providers or repositories.
 
@@ -119,3 +142,6 @@ pytest src --cov=src
 - Integration tests test the full working of `ConcreteAIConversationClient`.
 - API errors (e.g., invalid models, missing threads) are properly surfaced.
 - GeminiProvider reads API key from the environment with fallback for testing.
+- Public API (`api.py`) and Factory (`factory.py`) layers are added for clean integration into larger applications as part of HW4.
+- The Gmail Client is included as a git submodule at `src/gmail_client/` and must be initialized and updated to ensure proper functionality.
+- Submodule updates can be pulled with `git submodule update --remote --merge`.
