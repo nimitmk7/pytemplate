@@ -52,6 +52,10 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# E2E test repositories
+tests/e2e/test_repo/
+tests/e2e/temp_test_repo/
+
 # Translations
 *.mo
 *.pot
