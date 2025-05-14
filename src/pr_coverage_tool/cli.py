@@ -7,8 +7,8 @@ import tempfile
 import subprocess
 
 
-def main():
-    """Main entry point for the PR coverage tool CLI."""
+def main() -> None:
+    """Execute the PR coverage tool CLI."""
     parser = argparse.ArgumentParser(
         description="Analyze code coverage changes in a pull request"
     )

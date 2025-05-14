@@ -16,14 +16,14 @@ from pr_coverage_tool.coverage_parser_interface import (
 
 
 class TestPRCoverageTool:
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test fixtures."""
         self.git_client = Mock()
         self.reporter = Mock()
         self.coverage_parser = Mock()
         self.tool = PRCoverageTool(self.git_client, self.reporter, self.coverage_parser)
 
-    def test_analyze_full_flow(self):
+    def test_analyze_full_flow(self) -> None:
         """Test the full analyze flow."""
         # Setup PR info
         pr_info = PRInfo(
@@ -110,7 +110,7 @@ class TestPRCoverageTool:
                     self.git_client.pop_stash.assert_called_once()
 
     @patch('subprocess.run')
-    def test_get_merge_base(self, mock_run):
+    def test_get_merge_base(self, mock_run: Mock) -> None:
         """Test getting merge base."""
         mock_run.return_value = Mock(stdout="merge123\n", returncode=0)
         
@@ -127,7 +127,7 @@ class TestPRCoverageTool:
     @patch('subprocess.run')
     @patch('tempfile.NamedTemporaryFile')
     @patch('pathlib.Path.unlink')
-    def test_compute_coverage(self, mock_unlink, mock_tempfile, mock_run):
+    def test_compute_coverage(self, mock_unlink: Mock, mock_tempfile: Mock, mock_run: Mock) -> None:
         """Test computing coverage at a commit."""
         # Setup temporary file
         temp_file = Mock()
@@ -158,7 +158,7 @@ class TestPRCoverageTool:
         self.coverage_parser.parse_coverage_xml.assert_called_once_with("/tmp/coverage.xml")
         assert result == expected_coverage
 
-    def test_compare_coverage(self):
+    def test_compare_coverage(self) -> None:
         """Test comparing coverage between commits."""
         before = CoverageData(
             commit_sha="before",

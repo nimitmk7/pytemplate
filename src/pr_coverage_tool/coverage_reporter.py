@@ -1,6 +1,5 @@
 """Implementation of the Coverage Reporter."""
 import json
-from typing import List
 
 from .coverage_reporter_interface import CoverageReporterInterface
 from .pr_coverage_tool_interface import CoverageDelta, LineCoverage
@@ -44,16 +43,17 @@ class CoverageReporter(CoverageReporterInterface):
         
         return "\n".join(lines)
     
-    def format_line_coverage(self, file: str, lines: List[LineCoverage]) -> str:
+    def format_line_coverage(self, file: str, lines: list[LineCoverage]) -> str:
         """Format line-by-line coverage changes."""
         rows = []
         
         # Group consecutive lines for better readability
-        grouped_lines = []
-        current_group = []
+        grouped_lines: list[list[LineCoverage]] = []
+        current_group: list[LineCoverage] = []
         
         for line in sorted(lines, key=lambda x: x.line_number):
-            if not current_group or line.line_number == current_group[-1].line_number + 1:
+            if (not current_group or 
+                line.line_number == current_group[-1].line_number + 1):
                 current_group.append(line)
             else:
                 grouped_lines.append(current_group)
@@ -65,7 +65,9 @@ class CoverageReporter(CoverageReporterInterface):
         for group in grouped_lines:
             if len(group) == 1:
                 line = group[0]
-                status_change = self._format_status_change(line.before_status, line.after_status)
+                status_change = self._format_status_change(
+                    line.before_status, line.after_status
+                )
                 rows.append(f"Line {line.line_number}: {status_change}")
             else:
                 first_line = group[0].line_number
@@ -74,29 +76,39 @@ class CoverageReporter(CoverageReporterInterface):
                 # Check if all lines in group have same status change
                 same_change = all(
                     self._format_status_change(line.before_status, line.after_status) ==
-                    self._format_status_change(group[0].before_status, group[0].after_status)
+                    self._format_status_change(
+                        group[0].before_status, group[0].after_status
+                    )
                     for line in group
                 )
                 
                 if same_change:
-                    status_change = self._format_status_change(group[0].before_status, group[0].after_status)
+                    status_change = self._format_status_change(
+                        group[0].before_status, group[0].after_status
+                    )
                     rows.append(f"Lines {first_line}-{last_line}: {status_change}")
                 else:
                     for line in group:
-                        status_change = self._format_status_change(line.before_status, line.after_status)
+                        status_change = self._format_status_change(
+                            line.before_status, line.after_status
+                        )
                         rows.append(f"Line {line.line_number}: {status_change}")
         
         return "\n".join(rows)
     
     def summarize_changes(self, delta: CoverageDelta) -> str:
         """Generate a summary of coverage changes."""
-        coverage_symbol = "🔺" if delta.coverage_change > 0 else "🔻" if delta.coverage_change < 0 else "➖"
+        coverage_symbol = ("🔺" if delta.coverage_change > 0 
+                          else "🔻" if delta.coverage_change < 0 
+                          else "➖")
         
         summary = [
-            f"## Coverage Summary",
-            f"",
-            f"**Total Coverage:** {delta.total_coverage_before:.2f}% → {delta.total_coverage_after:.2f}% ({delta.coverage_change:+.2f}%) {coverage_symbol}",
-            f""
+            "## Coverage Summary",
+            "",
+            (f"**Total Coverage:** {delta.total_coverage_before:.2f}% → "
+             f"{delta.total_coverage_after:.2f}% ({delta.coverage_change:+.2f}%) "
+             f"{coverage_symbol}"),
+            ""
         ]
         
         # Count line coverage changes
@@ -107,7 +119,8 @@ class CoverageReporter(CoverageReporterInterface):
             for line in file_lines:
                 if line.before_status == 'uncovered' and line.after_status == 'covered':
                     lines_improved += 1
-                elif line.before_status == 'covered' and line.after_status == 'uncovered':
+                elif (line.before_status == 'covered' and 
+                      line.after_status == 'uncovered'):
                     lines_degraded += 1
         
         if lines_improved > 0:
@@ -128,7 +141,7 @@ class CoverageReporter(CoverageReporterInterface):
     
     def format_as_json(self, delta: CoverageDelta) -> str:
         """Format the report as JSON for API responses."""
-        data = {
+        data: dict[str, object] = {
             "total_coverage_before": delta.total_coverage_before,
             "total_coverage_after": delta.total_coverage_after,
             "coverage_change": delta.coverage_change,
@@ -137,8 +150,9 @@ class CoverageReporter(CoverageReporterInterface):
             "files_removed": delta.files_removed
         }
         
+        modified_lines_data: dict[str, list[dict[str, object]]] = {}
         for file, lines in delta.modified_lines.items():
-            data["modified_lines"][file] = [
+            modified_lines_data[file] = [
                 {
                     "line_number": line.line_number,
                     "before_status": line.before_status,
@@ -146,6 +160,7 @@ class CoverageReporter(CoverageReporterInterface):
                 }
                 for line in lines
             ]
+        data["modified_lines"] = modified_lines_data
         
         return json.dumps(data, indent=2)
     

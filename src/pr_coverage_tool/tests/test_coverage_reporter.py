@@ -10,11 +10,11 @@ from pr_coverage_tool.pr_coverage_tool_interface import (
 
 
 class TestCoverageReporter:
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test fixtures."""
         self.reporter = CoverageReporter()
 
-    def test_format_status_change(self):
+    def test_format_status_change(self) -> None:
         """Test formatting of status changes."""
         assert self.reporter._format_status_change("covered", "covered") == "covered (no change)"
         assert self.reporter._format_status_change("uncovered", "covered") == "✅ now covered"
@@ -22,7 +22,7 @@ class TestCoverageReporter:
         assert self.reporter._format_status_change("not_present", "covered") == "newly added - covered"
         assert self.reporter._format_status_change("covered", "not_present") == "removed (was covered)"
 
-    def test_format_line_coverage_single_line(self):
+    def test_format_line_coverage_single_line(self) -> None:
         """Test formatting single line coverage."""
         lines = [
             LineCoverage(line_number=10, before_status="uncovered", after_status="covered"),
@@ -32,7 +32,7 @@ class TestCoverageReporter:
         
         assert "Line 10: ✅ now covered" in result
 
-    def test_format_line_coverage_consecutive_lines_same_change(self):
+    def test_format_line_coverage_consecutive_lines_same_change(self) -> None:
         """Test formatting consecutive lines with same change."""
         lines = [
             LineCoverage(line_number=10, before_status="uncovered", after_status="covered"),
@@ -44,7 +44,7 @@ class TestCoverageReporter:
         
         assert "Lines 10-12: ✅ now covered" in result
 
-    def test_format_line_coverage_mixed_changes(self):
+    def test_format_line_coverage_mixed_changes(self) -> None:
         """Test formatting lines with different changes."""
         lines = [
             LineCoverage(line_number=10, before_status="uncovered", after_status="covered"),
@@ -59,7 +59,7 @@ class TestCoverageReporter:
         assert "Line 11: ❌ lost coverage" in lines_result[1]
         assert "Line 12: ✅ now covered" in lines_result[2]
 
-    def test_summarize_changes_improved(self):
+    def test_summarize_changes_improved(self) -> None:
         """Test summary when coverage improves."""
         delta = CoverageDelta(
             total_coverage_before=80.0,
@@ -81,7 +81,7 @@ class TestCoverageReporter:
         assert "✅ 2 line(s) newly covered" in summary
         assert "📄 1 new file(s)" in summary
 
-    def test_summarize_changes_degraded(self):
+    def test_summarize_changes_degraded(self) -> None:
         """Test summary when coverage degrades."""
         delta = CoverageDelta(
             total_coverage_before=85.0,
@@ -102,7 +102,7 @@ class TestCoverageReporter:
         assert "❌ 1 line(s) lost coverage" in summary
         assert "🗑️ 1 file(s) removed" in summary
 
-    def test_generate_report(self):
+    def test_generate_report(self) -> None:
         """Test full report generation."""
         delta = CoverageDelta(
             total_coverage_before=80.0,
@@ -126,7 +126,7 @@ class TestCoverageReporter:
         assert "## New Files" in report
         assert "## Removed Files" in report
 
-    def test_format_as_json(self):
+    def test_format_as_json(self) -> None:
         """Test JSON formatting."""
         delta = CoverageDelta(
             total_coverage_before=80.0,

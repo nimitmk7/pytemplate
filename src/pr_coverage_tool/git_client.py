@@ -1,7 +1,6 @@
 """Implementation of the Git Client."""
 import re
 import subprocess
-from typing import Dict, List
 from urllib.parse import urlparse
 
 from .git_client_interface import GitClientInterface
@@ -30,16 +29,18 @@ class GitClient(GitClientInterface):
                 pr_number = int(path_parts[3])
                 repo_url = f"https://github.com/{owner}/{repo}"
             else:
-                raise ValueError(f"Invalid GitHub PR URL: {pr_url}")
+                error_msg = f"Invalid GitHub PR URL: {pr_url}"
+                raise ValueError(error_msg)
         else:
-            raise ValueError(f"Unsupported PR URL: {pr_url}")
+            error_msg = f"Unsupported PR URL: {pr_url}"
+            raise ValueError(error_msg)
         
         # Fetch PR information via git or API
         # For now, we'll get basic info from git
         # In production, this would use GitHub API
         
         # Get current branch info
-        result = subprocess.run(
+        subprocess.run(
             ["git", "branch", "-r", "--contains", "HEAD"],
             capture_output=True,
             text=True,
@@ -50,22 +51,18 @@ class GitClient(GitClientInterface):
         head_branch = f"pr-{pr_number}"
         base_branch = "main"
         
-        # # Get SHA for branches
-        # head_sha = self._get_commit_sha(head_branch)
-        # base_sha = self._get_commit_sha(base_branch)
-
+        # Get SHA for branches
         subprocess.run(
             ["git", "fetch", "origin", base_branch],
             check=True, capture_output=True
-             )
+        )
         subprocess.run(
-             ["git", "fetch", "origin", f"pull/{pr_number}/head:{head_branch}"],
-             check=True, capture_output=True
-             )
+            ["git", "fetch", "origin", f"pull/{pr_number}/head:{head_branch}"],
+            check=True, capture_output=True
+        )
         
         head_sha = self._get_commit_sha(head_branch)
         base_sha = self._get_commit_sha(base_branch)
- 
         
         return PRInfo(
             pr_number=pr_number,
@@ -76,7 +73,7 @@ class GitClient(GitClientInterface):
             repo_url=repo_url
         )
     
-    def get_modified_files(self, base: str, head: str) -> List[str]:
+    def get_modified_files(self, base: str, head: str) -> list[str]:
         """Get list of modified files between two commits."""
         result = subprocess.run(
             ["git", "diff", "--name-only", base, head],
@@ -86,7 +83,7 @@ class GitClient(GitClientInterface):
         )
         return [f for f in result.stdout.strip().split('\n') if f]
     
-    def get_modified_lines(self, base: str, head: str, file: str) -> List[int]:
+    def get_modified_lines(self, base: str, head: str, file: str) -> list[int]:
         """Get modified line numbers for a specific file."""
         result = subprocess.run(
             ["git", "diff", "-U0", base, head, "--", file],
@@ -95,7 +92,7 @@ class GitClient(GitClientInterface):
             check=True
         )
         
-        modified_lines = []
+        modified_lines: list[int] = []
         for line in result.stdout.split('\n'):
             # Parse unified diff format
             # Example: @@ -1,3 +1,5 @@

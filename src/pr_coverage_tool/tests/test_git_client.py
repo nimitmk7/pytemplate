@@ -3,6 +3,7 @@ import subprocess
 from unittest.mock import Mock, patch
 import sys
 import os
+from typing import Any
 
 # Add src to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
@@ -14,12 +15,12 @@ from pr_coverage_tool.pr_coverage_tool_interface import PRInfo
 
 
 class TestGitClient:
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test fixtures."""
         self.client = GitClient()
 
     @patch('subprocess.run')
-    def test_checkout(self, mock_run):
+    def test_checkout(self, mock_run: Mock) -> None:
         """Test checking out a commit."""
         self.client.checkout("abc123")
         mock_run.assert_called_once_with(
@@ -28,7 +29,7 @@ class TestGitClient:
             capture_output=True
         )
 
-    def test_get_pr_info_github(self):
+    def test_get_pr_info_github(self) -> None:
         """Test extracting PR info from GitHub URL."""
         with patch.object(self.client, '_get_commit_sha') as mock_sha:
             mock_sha.side_effect = ["base_sha", "head_sha"]
@@ -44,13 +45,13 @@ class TestGitClient:
                 assert pr_info.base_branch == "main"
                 assert pr_info.head_branch == "pr-123"
 
-    def test_get_pr_info_invalid_url(self):
+    def test_get_pr_info_invalid_url(self) -> None:
         """Test handling invalid PR URL."""
         with pytest.raises(ValueError, match="Invalid GitHub PR URL"):
             self.client.get_pr_info("https://github.com/owner/repo/issues/123")
 
     @patch('subprocess.run')
-    def test_get_modified_files(self, mock_run):
+    def test_get_modified_files(self, mock_run: Mock) -> None:
         """Test getting modified files."""
         mock_run.return_value = Mock(
             stdout="file1.py\nfile2.py\n",
@@ -68,7 +69,7 @@ class TestGitClient:
         )
 
     @patch('subprocess.run')
-    def test_get_modified_lines(self, mock_run):
+    def test_get_modified_lines(self, mock_run: Mock) -> None:
         """Test getting modified lines for a file."""
         # Mock git diff output
         diff_output = """
@@ -90,7 +91,7 @@ class TestGitClient:
         assert sorted(lines) == [10, 11, 12, 13, 14, 22, 23, 24, 25]
 
     @patch('subprocess.run')
-    def test_get_current_branch(self, mock_run):
+    def test_get_current_branch(self, mock_run: Mock) -> None:
         """Test getting current branch name."""
         mock_run.return_value = Mock(stdout="feature-branch\n", returncode=0)
         
@@ -105,7 +106,7 @@ class TestGitClient:
         )
 
     @patch('subprocess.run')
-    def test_stash_changes(self, mock_run):
+    def test_stash_changes(self, mock_run: Mock) -> None:
         """Test stashing changes."""
         self.client.stash_changes()
         
@@ -115,7 +116,7 @@ class TestGitClient:
         )
 
     @patch('subprocess.run')
-    def test_pop_stash_with_stash(self, mock_run):
+    def test_pop_stash_with_stash(self, mock_run: Mock) -> None:
         """Test popping stash when stash exists."""
         # First call returns stash list, second call pops
         mock_run.side_effect = [
@@ -130,7 +131,7 @@ class TestGitClient:
         mock_run.assert_any_call(["git", "stash", "pop"], check=True)
 
     @patch('subprocess.run')
-    def test_pop_stash_no_stash(self, mock_run):
+    def test_pop_stash_no_stash(self, mock_run: Mock) -> None:
         """Test popping stash when no stash exists."""
         mock_run.return_value = Mock(stdout="", returncode=0)
         

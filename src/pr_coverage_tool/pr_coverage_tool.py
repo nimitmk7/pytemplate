@@ -1,9 +1,7 @@
 """Implementation of the PR Coverage Tool."""
-import json
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Dict, List
 
 from .pr_coverage_tool_interface import (
     CoverageDelta,
@@ -16,15 +14,18 @@ from .coverage_reporter_interface import CoverageReporterInterface
 from .coverage_parser_interface import (
     CoverageParserInterface,
     CoverageData,
-    FileCoverage,
 )
 
 
 class PRCoverageTool(PRCoverageToolInterface):
     """Concrete implementation of PR coverage analysis."""
     
-    def __init__(self, git_client: GitClientInterface, reporter: CoverageReporterInterface,
-                 coverage_parser: CoverageParserInterface):
+    def __init__(
+        self, 
+        git_client: GitClientInterface, 
+        reporter: CoverageReporterInterface,
+        coverage_parser: CoverageParserInterface
+    ) -> None:
         """Initialize with dependencies.
         
         Args:
@@ -58,7 +59,9 @@ class PRCoverageTool(PRCoverageToolInterface):
             after_coverage = self.compute_coverage(pr_info.head_sha)
             
             # Get modified lines
-            modified_files = self.git_client.get_modified_files(merge_base, pr_info.head_sha)
+            modified_files = self.git_client.get_modified_files(
+                merge_base, pr_info.head_sha
+            )
             modified_lines = {}
             for file in modified_files:
                 modified_lines[file] = self.git_client.get_modified_lines(
@@ -66,7 +69,9 @@ class PRCoverageTool(PRCoverageToolInterface):
                 )
             
             # Compare coverage
-            coverage_delta = self.compare_coverage(before_coverage, after_coverage, modified_lines)
+            coverage_delta = self.compare_coverage(
+                before_coverage, after_coverage, modified_lines
+            )
             
             # Generate summary
             summary = self.reporter.summarize_changes(coverage_delta)
@@ -131,8 +136,12 @@ class PRCoverageTool(PRCoverageToolInterface):
         finally:
             Path(coverage_xml).unlink(missing_ok=True)
     
-    def compare_coverage(self, before: CoverageData, after: CoverageData,
-                        modified_lines: Dict[str, List[int]]) -> CoverageDelta:
+    def compare_coverage(
+        self, 
+        before: CoverageData, 
+        after: CoverageData,
+        modified_lines: dict[str, list[int]]
+    ) -> CoverageDelta:
         """Compare coverage data between two commits."""
         modified_line_coverage = {}
         

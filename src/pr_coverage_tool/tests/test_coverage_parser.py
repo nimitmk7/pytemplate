@@ -11,11 +11,11 @@ from pr_coverage_tool.coverage_parser_interface import (
 
 
 class TestCoverageParser:
-    def setup_method(self):
+    def setup_method(self) -> None:
         """Set up test fixtures."""
         self.parser = CoverageParser()
 
-    def test_parse_simple_coverage_xml(self):
+    def test_parse_simple_coverage_xml(self) -> None:
         """Test parsing a simple coverage XML file."""
         xml_content = """<?xml version="1.0" ?>
 <coverage line-rate="0.85">
@@ -53,7 +53,7 @@ class TestCoverageParser:
         assert result.files["test.py"].line_data[2] == "uncovered"
         assert result.files["test.py"].line_data[3] == "covered"
 
-    def test_parse_multi_file_coverage(self):
+    def test_parse_multi_file_coverage(self) -> None:
         """Test parsing coverage with multiple files."""
         xml_content = """<?xml version="1.0" ?>
 <coverage line-rate="0.75">
@@ -93,7 +93,7 @@ class TestCoverageParser:
         assert result.files["file1.py"].covered_lines == 1
         assert result.files["file2.py"].covered_lines == 2
 
-    def test_parse_empty_coverage(self):
+    def test_parse_empty_coverage(self) -> None:
         """Test parsing coverage with no lines."""
         xml_content = """<?xml version="1.0" ?>
 <coverage line-rate="0.0">

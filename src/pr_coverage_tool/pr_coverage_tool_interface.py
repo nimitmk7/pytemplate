@@ -4,13 +4,13 @@ Analyzes code coverage changes in pull requests.
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, List
 from .coverage_parser_interface import CoverageData
 
 
 @dataclass
 class LineCoverage:
     """Represents coverage status for a specific line."""
+    
     line_number: int
     before_status: str  # 'covered', 'uncovered', 'not_present'
     after_status: str   # 'covered', 'uncovered', 'not_present'
@@ -19,17 +19,19 @@ class LineCoverage:
 @dataclass
 class CoverageDelta:
     """Coverage difference between two commits."""
+    
     total_coverage_before: float
     total_coverage_after: float
     coverage_change: float
-    modified_lines: Dict[str, List[LineCoverage]]
-    files_added: List[str]
-    files_removed: List[str]
+    modified_lines: dict[str, list[LineCoverage]]
+    files_added: list[str]
+    files_removed: list[str]
 
 
 @dataclass
 class PRInfo:
     """Pull request information."""
+    
     pr_number: int
     base_branch: str
     head_branch: str
@@ -41,6 +43,7 @@ class PRInfo:
 @dataclass
 class CoverageReport:
     """Complete PR coverage analysis report."""
+    
     pr_info: PRInfo
     coverage_delta: CoverageDelta
     summary: str
@@ -88,7 +91,7 @@ class PRCoverageToolInterface(ABC):
 
     @abstractmethod
     def compare_coverage(self, before: 'CoverageData', after: 'CoverageData', 
-                        modified_lines: Dict[str, List[int]]) -> CoverageDelta:
+                        modified_lines: dict[str, list[int]]) -> CoverageDelta:
         """Compare coverage data between two commits.
         
         Args:

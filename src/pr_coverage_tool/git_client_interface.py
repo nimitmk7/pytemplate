@@ -3,7 +3,6 @@ Git client interface module.
 Handles git operations for checking out commits and getting PR information.
 """
 from abc import ABC, abstractmethod
-from typing import Dict, List
 from .pr_coverage_tool_interface import PRInfo
 
 
@@ -32,7 +31,7 @@ class GitClientInterface(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def get_modified_files(self, base: str, head: str) -> List[str]:
+    def get_modified_files(self, base: str, head: str) -> list[str]:
         """Get list of modified files between two commits.
         
         Args:
@@ -45,7 +44,7 @@ class GitClientInterface(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def get_modified_lines(self, base: str, head: str, file: str) -> List[int]:
+    def get_modified_lines(self, base: str, head: str, file: str) -> list[int]:
         """Get modified line numbers for a specific file.
         
         Args:

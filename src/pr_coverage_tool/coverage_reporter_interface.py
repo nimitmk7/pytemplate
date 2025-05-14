@@ -3,7 +3,6 @@ Coverage reporter interface module.
 Formats and displays coverage comparison results.
 """
 from abc import ABC, abstractmethod
-from typing import List
 from .pr_coverage_tool_interface import CoverageDelta, LineCoverage
 
 
@@ -23,7 +22,7 @@ class CoverageReporterInterface(ABC):
         pass  # pragma: no cover
 
     @abstractmethod
-    def format_line_coverage(self, file: str, lines: List[LineCoverage]) -> str:
+    def format_line_coverage(self, file: str, lines: list[LineCoverage]) -> str:
         """Format line-by-line coverage changes.
         
         Args:

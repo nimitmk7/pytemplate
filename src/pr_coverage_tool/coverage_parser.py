@@ -1,5 +1,4 @@
 """Implementation of the Coverage Parser."""
-from pathlib import Path
 from xml.etree import ElementTree
 
 from .coverage_parser_interface import (
@@ -12,7 +11,7 @@ from .coverage_parser_interface import (
 class CoverageParser(CoverageParserInterface):
     """Concrete implementation of coverage data parsing."""
     
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the parser."""
         self._commit_sha = ""
     
@@ -34,7 +33,9 @@ class CoverageParser(CoverageParserInterface):
                 
                 lines = class_elem.findall('./lines/line')
                 total_lines = len(lines)
-                covered_lines = sum(1 for line in lines if line.attrib.get('hits', '0') != '0')
+                covered_lines = sum(
+                    1 for line in lines if line.attrib.get('hits', '0') != '0'
+                )
                 
                 line_data = {}
                 for line in lines:
@@ -42,7 +43,9 @@ class CoverageParser(CoverageParserInterface):
                     hits = int(line.attrib.get('hits', 0))
                     line_data[line_num] = 'covered' if hits > 0 else 'uncovered'
                 
-                coverage_percentage = (covered_lines / total_lines * 100) if total_lines > 0 else 0
+                coverage_percentage = (
+                    (covered_lines / total_lines * 100) if total_lines > 0 else 0
+                )
                 
                 files[filename] = FileCoverage(
                     filename=filename,

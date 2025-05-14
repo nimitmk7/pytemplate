@@ -4,25 +4,26 @@ Parses coverage data from various formats.
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict
 
 
 @dataclass
 class FileCoverage:
     """Represents coverage data for a single file."""
+    
     filename: str
     total_lines: int
     covered_lines: int
     coverage_percentage: float
-    line_data: Dict[int, str]  # line_number -> coverage status
+    line_data: dict[int, str]  # line_number -> coverage status
 
 
 @dataclass
 class CoverageData:
     """Complete coverage data for a commit."""
+    
     commit_sha: str
     total_coverage: float
-    files: Dict[str, FileCoverage]
+    files: dict[str, FileCoverage]
 
 
 class CoverageParserInterface(ABC):
