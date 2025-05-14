@@ -36,11 +36,19 @@ def main() -> None:
     print(f"PR URL: {args.pr_url}")
     print(f"Output format: {args.format}")
 
+    # Store the original working directory for output file
+    original_cwd = os.getcwd()
+    
+    # If output path is specified and relative, convert to absolute path
+    output_path = None
+    if args.output:
+        output_path = os.path.abspath(args.output)
+        print(f"Output will be saved to: {output_path}")
+
     # Derive the repository URL for cloning
     repo_clone_url = args.pr_url.split("/pull/")[0]
     print(f"Cloning repository: {repo_clone_url}")
 
-    original_cwd = os.getcwd()
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
             # Clone the repository into a temporary directory
@@ -84,10 +92,10 @@ def main() -> None:
                 return
 
             # Write to file or print to stdout
-            if args.output:
-                with open(args.output, "w") as f:
+            if output_path:
+                with open(output_path, "w") as f:
                     f.write(output)
-                print(f"Report written to {args.output}")
+                print(f"Report written to {output_path}")
             else:
                 print("Coverage Report:")
                 print(output)
