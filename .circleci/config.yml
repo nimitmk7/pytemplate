@@ -30,6 +30,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Setup Git config for tests
+          command: |
+            git config --global user.name "CircleCI Test"
+            git config --global user.email "test@circleci.com"
+      - run:
           name: Installing UV
           command: curl -LsSf https://astral.sh/uv/install.sh | sh
       - run:
@@ -40,6 +45,11 @@ jobs:
           command: |
             source .venv/bin/activate
             uv pip install -e .[dev]
+      - run:
+          name: Create test repository for E2E tests
+          command: |
+            source .venv/bin/activate
+            bash create_repo.sh
       - run: 
           name: Check code formatting (ruff)
           command: |
@@ -51,15 +61,16 @@ jobs:
             source .venv/bin/activate
             uvx mypy src/
       - run:
-          name: Run unit tests with coverage
+          name: Run all tests with coverage
           command: |
             source .venv/bin/activate
             mkdir -p test-results
-            # Use coverage directly to respect omit settings
-            coverage run --source=src --rcfile=pyproject.toml -m pytest src tests
-            coverage xml -o coverage.xml
+            pytest --cov=src --cov-report=xml --cov-report=term --cov-report=html:coverage-html src tests -v --junitxml=test-results/junit.xml
+      - run:
+          name: Check coverage threshold
+          command: |
+            source .venv/bin/activate
             coverage report --fail-under=90
-            coverage html -d coverage-html
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -72,55 +83,7 @@ jobs:
           path: coverage.xml
           destination: coverage.xml
 
-  test_pr_coverage_tool:
-    docker:
-      - image: cimg/python:3.12
-    environment:
-      PYTHONPATH: .
-    steps:
-      - checkout
-      - run:
-          name: Setup Git config for tests
-          command: |
-            git config --global user.name "CircleCI Test"
-            git config --global user.email "test@circleci.com"
-      - run:
-          name: Installing UV
-          command: curl -LsSf https://astral.sh/uv/install.sh | sh
-      - run:
-          name: Create virtual environment
-          command: uv venv .venv
-      - run:
-          name: Install dependencies
-          command: |
-            source .venv/bin/activate
-            uv pip install -e .[dev]
-      - run:
-          name: Create test repository for E2E tests
-          command: |
-            source .venv/bin/activate
-            bash create_repo.sh
-      - run:
-          name: Run PR Coverage Tool tests
-          command: |
-            source .venv/bin/activate
-            mkdir -p test-results
-            coverage run --source=src --rcfile=pyproject.toml -m pytest src/pr_coverage_tool/tests tests/e2e
-            coverage xml -o coverage-pr-tool.xml
-            coverage html -d coverage-pr-tool
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: coverage-pr-tool
-          destination: coverage-pr-tool
-      - store_artifacts:
-          path: coverage-pr-tool.xml
-          destination: coverage-pr-tool.xml
-
 workflows:
   build-workflow:
     jobs:
       - build_and_test
-      - test_pr_coverage_tool:
-          requires:
-            - build_and_test
