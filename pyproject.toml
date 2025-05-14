@@ -1,17 +1,15 @@
 [project]
-name = "python-template-repo"
+name = "pr-coverage-tool"
 version = "0.1.0"
-description = "Python project template with testing, linting, and CI/CD"
+description = "Tool for analyzing code coverage changes in pull requests"
 requires-python = ">=3.12"
 license = {text = "MIT"}
 readme = "README.md"
 
-
 dependencies = [
     "pytest==8.3.5",
-    "ruff==0.9.9",
-    "coverage", 
-    "mypy"
+    "coverage",
+    "mypy",
 ]
 
 [build-system]
@@ -26,11 +24,16 @@ dev = [
     "ruff>=0.1.5",
 ]
 
+[project.scripts]
+pr-coverage-tool = "pr_coverage_tool.__main__:main"
+
 [tool.pytest.ini_options]
 testpaths = ["src", "tests"]
 python_files = "test_*.py"
 addopts = "--cov=src --cov-report=xml --cov-report=term"
-
+pythonpath = ["src"]
+# Exclude test repositories used for E2E testing
+norecursedirs = ["tests/e2e/test_repo", "tests/e2e/temp_test_repo"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -51,3 +54,9 @@ convention = "google"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
+
+[tool.coverage]
+omit = [
+    "tests/e2e/test_repo/*",
+    "tests/e2e/temp_test_repo/*",
+]
